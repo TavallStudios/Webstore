@@ -1,0 +1,12 @@
+.git
+.idea
+.tmp
+node_modules
+tmp-admin-shots
+target
+**/target
+run-live*.out
+run-live*.err
+vite-dev.out
+vite-dev.err
+media
