@@ -37,11 +37,11 @@ import org.tavall.platform.runtime.TenantSiteRuntimePowerState;
 import org.tavall.platform.runtime.TenantSiteRuntimeStatus;
 
 @SpringBootTest(
-        classes = PlatformInternalApiDelegationIntegrationTest.TestApplication.class,
+        classes = PlatformInternalApiDelegationTest.TestApplication.class,
         properties = "platform.control.internal-api.shared-secret=test-secret"
 )
 @AutoConfigureMockMvc
-class PlatformInternalApiDelegationIntegrationTest {
+class PlatformInternalApiDelegationTest {
 
     @Autowired
     private MockMvc mockMvc;
