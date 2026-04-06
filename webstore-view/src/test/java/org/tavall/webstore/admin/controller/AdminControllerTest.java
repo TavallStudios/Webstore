@@ -73,7 +73,7 @@ import org.tavall.webstore.theme.service.ThemeAssetService;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-class AdminControllerIntegrationTest {
+class AdminControllerTest {
 
     private static final Pattern ANCHOR_PATTERN = Pattern.compile("<a\\b[^>]*href=\"([^\"]+)\"", Pattern.CASE_INSENSITIVE);
     private static final Pattern FORM_PATTERN = Pattern.compile("<form\\b([^>]*)>", Pattern.CASE_INSENSITIVE);
