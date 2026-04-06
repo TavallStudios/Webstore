@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Features</title>
+    <link rel="stylesheet" href="/platform.css">
+</head>
+<body>
+<div class="shell">
+    <div class="nav"><div class="brand">Tavall Platform</div><div class="nav-links"><a href="/">Home</a><a href="/login">Sign in</a></div></div>
+    <section class="panel">
+        <h1>Platform capabilities</h1>
+        <div class="feature-grid">
+            <div><strong>PostgreSQL source of truth</strong><p class="muted">Users, tenants, sites, domains, deployments, jobs, and audit history are modeled relationally.</p></div>
+            <div><strong>Intentional JSONB</strong><p class="muted">Provider metadata, runtime config snapshots, and flexible publication payloads stay queryable without a schema explosion.</p></div>
+            <div><strong>KubeVirt runtime control</strong><p class="muted">The control plane builds and applies VM, Service, and Ingress resources with explicit state transitions.</p></div>
+            <div><strong>Standalone storefront module</strong><p class="muted">The existing storefront now lives as `webstore-view` rather than being tangled into the platform shell.</p></div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

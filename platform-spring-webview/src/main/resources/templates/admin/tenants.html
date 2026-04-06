@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tenants</title><link rel="stylesheet" th:href="@{/admin.css}"></head>
+<body>
+<div class="shell">
+    <div class="nav"><div class="brand">Tenants</div><div class="nav-links"><a href="/admin">Dashboard</a><a href="/admin/sites">Sites</a></div></div>
+    <section class="panel">
+        <table class="table">
+            <tr><th>User</th><th>Tenant</th><th>Roles</th><th>Onboarding</th><th>Sites</th></tr>
+            <tr th:each="tenant : ${tenants}">
+                <td><strong th:text="${tenant.displayName}">User</strong><div class="muted" th:text="${tenant.email}">email</div></td>
+                <td th:text="${tenant.tenantDisplayName}">Tenant</td>
+                <td th:text="${tenant.roles}">Roles</td>
+                <td th:text="${tenant.onboardingState}">ACTIVE</td>
+                <td th:text="${tenant.siteCount}">0</td>
+            </tr>
+        </table>
+    </section>
+</div>
+</body>
+</html>

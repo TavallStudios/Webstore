@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:${NOVUS_POSTGRES_URL:jdbc:postgresql://localhost:15432/tavall}}
+    username: ${DATABASE_USERNAME:${NOVUS_POSTGRES_USER:novus}}
+    password: ${DATABASE_PASSWORD:${NOVUS_POSTGRES_PASS:}}
+    hikari:
+      schema: ${STOREFRONT_DATABASE_SCHEMA:public}
+      data-source-properties:
+        sslmode: disable
+        connectTimeout: 5
+        socketTimeout: 30
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: ${STOREFRONT_DATABASE_SCHEMA:public}
+        jdbc:
+          time_zone: UTC
+        format_sql: true
+  thymeleaf:
+    cache: false
+  flyway:
+    enabled: true
+    default-schema: ${STOREFRONT_DATABASE_SCHEMA:public}
+    schemas: ${STOREFRONT_DATABASE_SCHEMA:public}
+    create-schemas: true
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 25MB
+
+server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/plain,text/css,application/javascript,application/json
+
+storefront:
+  media:
+    storage-path: ${MEDIA_STORAGE_PATH:./media}
+  assets:
+    media-cache-days: 30
+    static-cache-days: 365
+    dev-server-url: ${STOREFRONT_ASSETS_DEV_SERVER_URL:}
+  theme:
+    storage-path: ${THEME_STORAGE_PATH:./media/themes/active}
+  runtime:
+    tenant-account-id: ${STOREFRONT_RUNTIME_TENANT_ACCOUNT_ID:}
+    site-id: ${STOREFRONT_RUNTIME_SITE_ID:}
+    site-slug: ${STOREFRONT_RUNTIME_SITE_SLUG:default}
+    publication-version: ${STOREFRONT_RUNTIME_PUBLICATION_VERSION:v1}
+    primary-domain: ${STOREFRONT_RUNTIME_PRIMARY_DOMAIN:localhost}
+    database-schema: ${STOREFRONT_DATABASE_SCHEMA:public}

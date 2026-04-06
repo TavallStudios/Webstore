@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Engagement')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('engagement')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Engagement controls</p>
+                    <h1>Engagement</h1>
+                    <p class="lede">These live switches control urgency, upsells, tracking, and publishing features across the store.</p>
+                </div>
+                <span class="status-pill" th:attr="data-state=${#lists.size(featureFlags) > 0 ? 'ok' : 'warn'}"
+                      th:text="${#lists.size(featureFlags) > 0 ? 'Ready to operate' : 'No engagement controls found'}">Ready</span>
+            </div>
+            <div class="alert alert-success" th:if="${param.saved}">Engagement settings were updated.</div>
+        </section>
+
+        <section class="admin-columns">
+            <div class="admin-column">
+            <form class="engagement-card" th:each="flag, stat : ${featureFlags}" th:if="${stat.even}" th:action="@{|/admin/engagement/${flag.flagKey}|}" method="post">
+                <div class="provider-card-header">
+                    <div class="stack-sm">
+                        <p class="eyebrow" th:text="${flag.moduleName}">Module</p>
+                        <h3 th:text="${flag.displayName}">Toggle</h3>
+                        <p class="hint-text">Control the shopper-facing behavior for this experience from one switch instead of raw feature metadata.</p>
+                    </div>
+                    <span class="status-pill" th:attr="data-state=${flag.enabled ? 'ok' : 'neutral'}"
+                          th:text="${flag.enabled ? 'Live' : 'Hidden'}">Live</span>
+                </div>
+                <p class="muted" th:text="${flag.description}">Description</p>
+                <div class="stack-sm">
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Enable this experience</strong>
+                            <span>Turn this on only when the customer-facing copy, timing, and placement are ready for production traffic.</span>
+                        </span>
+                        <input type="checkbox" name="enabled" th:checked="${flag.enabled}">
+                    </label>
+                </div>
+                <div class="card-action-bar">
+                    <span class="hint-text" th:text="${flag.moduleName + ' module'}">Module</span>
+                    <button type="submit">Save engagement rule</button>
+                </div>
+            </form>
+            </div>
+            <div class="admin-column">
+            <form class="engagement-card" th:each="flag, stat : ${featureFlags}" th:if="${stat.odd}" th:action="@{|/admin/engagement/${flag.flagKey}|}" method="post">
+                <div class="provider-card-header">
+                    <div class="stack-sm">
+                        <p class="eyebrow" th:text="${flag.moduleName}">Module</p>
+                        <h3 th:text="${flag.displayName}">Toggle</h3>
+                        <p class="hint-text">Control the shopper-facing behavior for this experience from one switch instead of raw feature metadata.</p>
+                    </div>
+                    <span class="status-pill" th:attr="data-state=${flag.enabled ? 'ok' : 'neutral'}"
+                          th:text="${flag.enabled ? 'Live' : 'Hidden'}">Live</span>
+                </div>
+                <p class="muted" th:text="${flag.description}">Description</p>
+                <div class="stack-sm">
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Enable this experience</strong>
+                            <span>Turn this on only when the customer-facing copy, timing, and placement are ready for production traffic.</span>
+                        </span>
+                        <input type="checkbox" name="enabled" th:checked="${flag.enabled}">
+                    </label>
+                </div>
+                <div class="card-action-bar">
+                    <span class="hint-text" th:text="${flag.moduleName + ' module'}">Module</span>
+                    <button type="submit">Save engagement rule</button>
+                </div>
+            </form>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

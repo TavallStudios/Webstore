@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: storeHead('Order Confirmed')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: storeHeader('atlas-bottle')}"></header>
+<th:block th:utext="${globalThemeRender.bodyTopHtml}"></th:block>
+<main class="storefront-main">
+    <div class="page-shell story-stack">
+        <section class="section-card">
+            <p class="eyebrow" th:text="${order.orderNumber}">Order number</p>
+            <h1>Your order is confirmed</h1>
+            <p th:text="|Thanks, ${order.customerName}. We emailed ${order.email} and stored your order for tracking.|">Confirmation body</p>
+            <div class="inline-actions">
+                <a class="button button-primary" th:href="@{/tracking}">Track order</a>
+                <a class="button button-secondary" th:href="@{/products/atlas-bottle}">Shop again</a>
+            </div>
+        </section>
+        <section class="section-card">
+            <h2>Order summary</h2>
+            <div class="order-line-list">
+                <article class="order-line" th:each="line : ${order.lineItems}">
+                    <div>
+                        <strong th:text="${line.productName}">Item</strong>
+                        <p th:text="${line.quantity + ' x ' + line.sku}">Qty</p>
+                    </div>
+                    <span th:text="|$${#numbers.formatDecimal(line.lineTotal, 1, 2)}|">$42.00</span>
+                </article>
+            </div>
+            <p th:text="|Total paid: $${#numbers.formatDecimal(order.totalAmount, 1, 2)}|">Total</p>
+        </section>
+    </div>
+</main>
+<th:block th:utext="${globalThemeRender.bodyBottomHtml}"></th:block>
+<footer th:replace="~{fragments/layout :: storeFooter()}"></footer>
+</body>
+</html>

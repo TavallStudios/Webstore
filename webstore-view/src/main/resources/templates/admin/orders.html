@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Orders')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('orders')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Fulfillment queue</p>
+                    <h1>Orders</h1>
+                    <p class="lede">Open any order to manage shipment status, tracking updates, and customer support details.</p>
+                </div>
+            </div>
+            <div class="section-list">
+                <a th:each="order : ${orders}" th:href="@{|/admin/orders/${order.orderNumber}|}">
+                    <strong th:text="${order.orderNumber}">Order</strong>
+                    <span class="muted" th:text="${order.customerName + ' / ' + order.paymentStatus + ' / $' + #numbers.formatDecimal(order.totalAmount, 1, 2)}">Meta</span>
+                </a>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

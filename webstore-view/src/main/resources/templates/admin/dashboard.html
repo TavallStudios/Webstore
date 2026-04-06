@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Command Center')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('dashboard')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card admin-hero">
+            <div class="admin-hero-grid">
+                <div class="stack-md">
+                    <p class="eyebrow">Store command center</p>
+                    <h1 th:text="|${dashboard.storeName} control workspace|">Store control workspace</h1>
+                    <p class="lede">Operate catalog, launch settings, payments, engagement, and theme delivery from one dashboard. Every critical area below opens into a structured editor instead of raw configuration blobs.</p>
+                    <div class="admin-hero-actions">
+                        <a class="button button-primary" href="/admin/products">Open catalog</a>
+                        <a class="button button-secondary" href="/admin/site-settings">Edit brand</a>
+                        <a class="button button-secondary" href="/admin/themes">Launch theme studio</a>
+                    </div>
+                </div>
+                <div class="stack-md">
+                    <div class="admin-stat-strip">
+                        <article class="admin-stat">
+                            <strong th:text="${dashboard.connectedPaymentProviderCount}">0</strong>
+                            <span class="muted">Connected payment providers</span>
+                        </article>
+                        <article class="admin-stat">
+                            <strong th:text="${dashboard.paymentMode}">sandbox</strong>
+                            <span class="muted">Checkout mode</span>
+                        </article>
+                        <article class="admin-stat">
+                            <strong th:text="${dashboard.themeFileCount}">0</strong>
+                            <span class="muted">Theme workspace files</span>
+                        </article>
+                        <article class="admin-stat">
+                            <strong th:text="${dashboard.storefrontThemeReady ? 'Live' : 'Default'}">Live</strong>
+                            <span class="muted">Theme runtime state</span>
+                        </article>
+                    </div>
+                    <span class="status-pill" th:attr="data-state=${dashboard.connectedPaymentProviderCount > 0 ? 'ok' : 'warn'}"
+                          th:text="${dashboard.connectedPaymentProviderCount > 0 ? 'Checkout is production-ready to configure further' : 'Add a Stripe or PayPal credential set before going live'}">
+                        Checkout state
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-metric-grid">
+            <article class="metric-card">
+                <div class="metric-value" th:text="${dashboard.productCount}">0</div>
+                <h3>Products</h3>
+                <p>Catalog entries ready for pricing, media, offers, and conversion content.</p>
+            </article>
+            <article class="metric-card">
+                <div class="metric-value" th:text="${dashboard.activeEngagementCount}">0</div>
+                <h3>Engagement Rules</h3>
+                <p>Live conversion and experience toggles currently enabled in production.</p>
+            </article>
+            <article class="metric-card">
+                <div class="metric-value" th:text="${dashboard.orderCount}">0</div>
+                <h3>Orders</h3>
+                <p>Order records ready for fulfillment updates, tracking, and support review.</p>
+            </article>
+            <article class="metric-card">
+                <div class="metric-value" th:text="${dashboard.mediaAssetCount}">0</div>
+                <h3>Media Assets</h3>
+                <p>Images and downloadable assets stored for storefront and admin content.</p>
+            </article>
+            <article class="metric-card">
+                <div class="metric-value" th:text="${dashboard.pageCount}">0</div>
+                <h3>Pages</h3>
+                <p>Storefront page definitions available for the home and product narratives.</p>
+            </article>
+            <article class="metric-card">
+                <div class="metric-value" th:text="${dashboard.sectionCount}">0</div>
+                <h3>Sections</h3>
+                <p>Composable content blocks managed through the visual page editor.</p>
+            </article>
+        </section>
+
+        <section class="admin-action-grid">
+            <a class="admin-quick-card surface-card" href="/admin/products">
+                <p class="eyebrow">Commerce</p>
+                <h3>Catalog editor</h3>
+                <p>Manage product positioning, media, FAQs, proof points, and storefront presentation.</p>
+            </a>
+            <a class="admin-quick-card surface-card" href="/admin/offers">
+                <p class="eyebrow">Revenue</p>
+                <h3>Offers & plans</h3>
+                <p>Control bundles and subscriptions with simple badge, pricing, and interval fields.</p>
+            </a>
+            <a class="admin-quick-card surface-card" href="/admin/engagement">
+                <p class="eyebrow">Optimization</p>
+                <h3>Engagement center</h3>
+                <p>Toggle urgency, tracking, and content capabilities with live-ready controls.</p>
+            </a>
+            <a class="admin-quick-card surface-card" href="/admin/payments">
+                <p class="eyebrow">Security</p>
+                <h3>Payment connections</h3>
+                <p>Configure Stripe and PayPal credentials, modes, and payment handling policies.</p>
+            </a>
+            <a class="admin-quick-card surface-card" href="/admin/site-settings">
+                <p class="eyebrow">Brand</p>
+                <h3>Brand & messaging</h3>
+                <p>Update colors, typography, social links, review proof, footer links, and homepage callouts.</p>
+            </a>
+            <a class="admin-quick-card surface-card" href="/admin/themes">
+                <p class="eyebrow">Theme</p>
+                <h3>Theme studio</h3>
+                <p>Edit raw CSS, JS, TS, and HTML theme files and import external theme assets.</p>
+            </a>
+        </section>
+
+        <section class="dashboard-dual-grid">
+            <article class="admin-card stack-md">
+                <div class="admin-card-header">
+                    <div class="stack-sm">
+                        <p class="eyebrow">Readiness</p>
+                        <h2>Launch checklist</h2>
+                    </div>
+                    <a class="button button-secondary" href="/admin/payments">Critical setup</a>
+                </div>
+                <div class="checklist-list">
+                    <div class="checklist-item">
+                        <div class="checklist-copy">
+                            <strong>Payments connected</strong>
+                            <p class="muted">Store at least one valid Stripe or PayPal credential set before turning checkout fully live.</p>
+                        </div>
+                        <span class="status-pill"
+                              th:attr="data-state=${dashboard.connectedPaymentProviderCount > 0 ? 'ok' : 'warn'}"
+                              th:text="${dashboard.connectedPaymentProviderCount > 0 ? 'Ready' : 'Needs setup'}">Ready</span>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="checklist-copy">
+                            <strong>Catalog published</strong>
+                            <p class="muted">Products should exist with pricing, proof, and media before traffic is routed into the storefront.</p>
+                        </div>
+                        <span class="status-pill"
+                              th:attr="data-state=${dashboard.productCount > 0 ? 'ok' : 'warn'}"
+                              th:text="${dashboard.productCount > 0 ? 'Ready' : 'Add products'}">Ready</span>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="checklist-copy">
+                            <strong>Store narrative loaded</strong>
+                            <p class="muted">Home and product pages should have enough sections to tell the story without placeholder content.</p>
+                        </div>
+                        <span class="status-pill"
+                              th:attr="data-state=${dashboard.pageCount > 0 and dashboard.sectionCount > 0 ? 'ok' : 'warn'}"
+                              th:text="${dashboard.pageCount > 0 and dashboard.sectionCount > 0 ? 'Ready' : 'Needs content'}">Ready</span>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="checklist-copy">
+                            <strong>Theme workspace active</strong>
+                            <p class="muted">Use the default theme safely, or publish custom assets when the storefront needs deeper branding control.</p>
+                        </div>
+                        <span class="status-pill"
+                              th:attr="data-state=${dashboard.storefrontThemeReady ? 'ok' : 'neutral'}"
+                              th:text="${dashboard.storefrontThemeReady ? 'Customized' : 'Default theme'}">Default theme</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="admin-card stack-md">
+                <div class="admin-card-header">
+                    <div class="stack-sm">
+                        <p class="eyebrow">Workflows</p>
+                        <h2>High-priority paths</h2>
+                    </div>
+                    <a class="button button-secondary" href="/admin">Refresh overview</a>
+                </div>
+                <div class="admin-link-list">
+                    <a class="admin-link-row" href="/admin/site-settings">
+                        <div class="checklist-copy">
+                            <strong>Brand system</strong>
+                            <p class="muted">Palette, typography, social proof, footer links, and shipping promises.</p>
+                        </div>
+                        <span>Open</span>
+                    </a>
+                    <a class="admin-link-row" href="/admin/pages/home">
+                        <div class="checklist-copy">
+                            <strong>Homepage story</strong>
+                            <p class="muted">Hero, trust panels, lifestyle sections, comparisons, and conversion CTA blocks.</p>
+                        </div>
+                        <span>Edit</span>
+                    </a>
+                    <a class="admin-link-row" href="/admin/engagement">
+                        <div class="checklist-copy">
+                            <strong>Engagement controls</strong>
+                            <p class="muted">Urgency, sticky cart behavior, delivery estimates, and conversion surfaces.</p>
+                        </div>
+                        <span>Review</span>
+                    </a>
+                    <a class="admin-link-row" href="/admin/themes">
+                        <div class="checklist-copy">
+                            <strong>Theme studio</strong>
+                            <p class="muted">Import or edit raw CSS, JS, TS, and HTML assets when the default visual system needs to go further.</p>
+                        </div>
+                        <span>Launch</span>
+                    </a>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
+</body>
+</html>

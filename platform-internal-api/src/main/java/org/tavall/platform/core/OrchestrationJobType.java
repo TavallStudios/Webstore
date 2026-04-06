@@ -1,0 +1,14 @@
+package org.tavall.platform.core;
+
+public enum OrchestrationJobType {
+    CREATE_RUNTIME,
+    LAUNCH_RUNTIME,
+    STOP_RUNTIME,
+    RESTART_RUNTIME,
+    DESTROY_RUNTIME,
+    MUTATE_RESOURCES,
+    MUTATE_INFRASTRUCTURE_PROFILE,
+    SYNC_STATUS,
+    PUBLISH_VERSION,
+    ASSIGN_DOMAIN
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Audit</title><link rel="stylesheet" th:href="@{/admin.css}"></head>
+<body>
+<div class="shell">
+    <div class="nav"><div class="brand">Audit History</div><div class="nav-links"><a href="/admin">Dashboard</a><a href="/admin/sites">Sites</a></div></div>
+    <section class="panel">
+        <table class="table">
+            <tr><th>Action</th><th>Subject</th><th>Summary</th><th>Created</th></tr>
+            <tr th:each="audit : ${audits}">
+                <td th:text="${audit.actionType}">Action</td>
+                <td th:text="${audit.subject}">Subject</td>
+                <td th:text="${audit.summary}">Summary</td>
+                <td th:text="${#temporals.format(audit.createdAt, 'yyyy-MM-dd HH:mm')}">Time</td>
+            </tr>
+        </table>
+    </section>
+</div>
+</body>
+</html>

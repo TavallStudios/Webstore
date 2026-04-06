@@ -1,0 +1,14 @@
+package org.tavall.platform.core;
+
+public enum AdminActionType {
+    LAUNCH_SITE,
+    STOP_SITE,
+    RESTART_SITE,
+    DESTROY_SITE,
+    MUTATE_SITE_RESOURCES,
+    MUTATE_SITE_INFRASTRUCTURE_PROFILE,
+    ASSIGN_SITE_DOMAIN,
+    PUBLISH_SITE_VERSION,
+    MARK_SITE_READY,
+    SYNC_SITE_STATUS
+}

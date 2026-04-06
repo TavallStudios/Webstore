@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: storeHead('Your Cart')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: storeHeader('atlas-bottle')}"></header>
+<th:block th:utext="${globalThemeRender.bodyTopHtml}"></th:block>
+<main class="storefront-main">
+    <div class="page-shell checkout-grid">
+        <section class="section-card">
+            <h1>Your cart</h1>
+            <div class="cart-list" th:if="${!#lists.isEmpty(cart.lineItems)}">
+                <article class="cart-row" th:each="line : ${cart.lineItems}">
+                    <div>
+                        <strong th:text="${line.productNameSnapshot}">Item</strong>
+                        <p th:text="${line.lineAttributes['bundleOfferName'] ?: line.lineAttributes['subscriptionPlanName'] ?: line.purchaseType}">Line detail</p>
+                    </div>
+                    <div class="inline-actions">
+                        <form th:action="@{|/cart/items/${line.id}|}" method="post">
+                            <input type="number" name="quantity" min="0" th:value="${line.quantity}">
+                            <button type="submit">Update</button>
+                        </form>
+                        <form th:action="@{|/cart/items/${line.id}/remove|}" method="post">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </div>
+                </article>
+            </div>
+            <p th:if="${#lists.isEmpty(cart.lineItems)}">Your cart is empty. Start from the product page.</p>
+        </section>
+        <aside class="section-card">
+            <h2>Summary</h2>
+            <p th:text="|Subtotal: $${#numbers.formatDecimal(cart.subtotalAmount, 1, 2)}|">Subtotal</p>
+            <p th:text="|Shipping: $${#numbers.formatDecimal(cart.shippingAmount, 1, 2)}|">Shipping</p>
+            <p th:text="|Total: $${#numbers.formatDecimal(cart.totalAmount, 1, 2)}|">Total</p>
+            <a class="button button-primary" href="/checkout">Continue to checkout</a>
+        </aside>
+    </div>
+</main>
+<th:block th:utext="${globalThemeRender.bodyBottomHtml}"></th:block>
+<footer th:replace="~{fragments/layout :: storeFooter()}"></footer>
+</body>
+</html>

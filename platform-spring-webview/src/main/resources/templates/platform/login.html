@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Login</title>
+    <link rel="stylesheet" th:href="@{/platform.css}">
+</head>
+<body>
+<div class="shell">
+    <div class="nav">
+        <div class="brand">Tavall Platform</div>
+        <div class="nav-links"><a href="/">Home</a><a href="/features">Features</a></div>
+    </div>
+    <section class="panel">
+        <div class="eyebrow">Social login only</div>
+        <h1>Tenant accounts do not use passwords.</h1>
+        <p class="muted">Choose a configured provider. Account creation, provider linking, tenant workspace creation, and onboarding routing are handled after the callback.</p>
+        <div class="auth-grid">
+            <a class="auth-provider" th:each="provider : ${providers}" th:href="@{/auth/{registrationId}(registrationId=${provider.registrationId})}">
+                <strong th:text="${provider.displayName}">Provider</strong>
+                <p class="muted">Continue with <span th:text="${provider.displayName}">provider</span>.</p>
+            </a>
+        </div>
+        <p class="footer-note" th:if="${providers.isEmpty()}">No provider registrations are currently configured for this environment.</p>
+    </section>
+</div>
+</body>
+</html>

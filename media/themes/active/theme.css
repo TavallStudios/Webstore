@@ -1,0 +1,8 @@
+/* Active theme stylesheet */
+:root {
+    --theme-panel-radius: 28px;
+}
+
+.theme-insert {
+    border-radius: var(--theme-panel-radius);
+}

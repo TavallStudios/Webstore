@@ -1,5 +1,7 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/apache-maven-*/
+.mvn/wrapper/apache-maven-*-bin.zip
 !**/src/main/**/target/
 !**/src/test/**/target/
 .kotlin
@@ -34,6 +36,14 @@ build/
 
 ### VS Code ###
 .vscode/
+node_modules/
+.vite/
 
 ### Mac OS ###
 .DS_Store
+
+# Local runs / artifacts
+run-live*.out
+run-live*.err
+vite-dev.*
+tmp-admin-shots/

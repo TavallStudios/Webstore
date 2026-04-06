@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 700" role="img" aria-label="Atlas Bottle side">
+  <rect width="700" height="700" rx="40" fill="#fffaf3"/>
+  <rect x="270" y="130" width="160" height="390" rx="78" fill="#2b2f33"/>
+  <rect x="305" y="92" width="90" height="84" rx="24" fill="#171b21"/>
+  <circle cx="350" cy="320" r="28" fill="#f7efe4"/>
+</svg>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/admin.css}">
+</head>
+<body>
+<div class="shell">
+    <div class="nav">
+        <div class="brand">Tavall Master Admin</div>
+        <div class="nav-links"><a href="/admin/tenants">Tenants</a><a href="/admin/sites">Sites</a><a href="/admin/deployments">Deployments</a><a href="/admin/operations">Operations</a><a href="/admin/audit">Audit</a></div>
+        <div class="nav-actions"><span class="chip" th:text="${currentUser != null ? currentUser.displayName : 'Admin'}">Admin</span><a class="chip" href="/logout">Logout</a></div>
+    </div>
+    <div class="stats">
+        <div class="card"><div class="eyebrow">Tenants</div><h2 th:text="${summary.totalTenants}">0</h2></div>
+        <div class="card"><div class="eyebrow">Sites</div><h2 th:text="${summary.totalSites}">0</h2></div>
+        <div class="card"><div class="eyebrow">Running</div><h2 th:text="${summary.runningSites}">0</h2></div>
+        <div class="card"><div class="eyebrow">Stopped</div><h2 th:text="${summary.stoppedSites}">0</h2></div>
+        <div class="card"><div class="eyebrow">Failed</div><h2 th:text="${summary.failedSites}">0</h2></div>
+    </div>
+    <div class="detail-grid">
+        <section class="panel">
+            <div class="eyebrow">Recent deployments</div>
+            <table class="table">
+                <tr><th>Site</th><th>Action</th><th>Status</th><th>Version</th></tr>
+                <tr th:each="deployment : ${summary.recentDeployments}">
+                    <td th:text="${deployment.siteName}">Site</td>
+                    <td th:text="${deployment.actionType}">Action</td>
+                    <td th:text="${deployment.status}">Status</td>
+                    <td th:text="${deployment.versionLabel}">Version</td>
+                </tr>
+            </table>
+        </section>
+        <section class="panel">
+            <div class="eyebrow">Runtime jobs</div>
+            <table class="table">
+                <tr><th>Site</th><th>Job</th><th>Status</th><th>Retry</th></tr>
+                <tr th:each="job : ${summary.recentJobs}">
+                    <td th:text="${job.siteName}">Site</td>
+                    <td th:text="${job.jobType}">Job</td>
+                    <td th:text="${job.jobStatus}">Status</td>
+                    <td th:text="${job.retryCount}">0</td>
+                </tr>
+            </table>
+        </section>
+    </div>
+</div>
+</body>
+</html>

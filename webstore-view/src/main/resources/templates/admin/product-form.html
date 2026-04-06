@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Product Editor')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('products')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Catalog editor</p>
+                    <h1>Product Editor</h1>
+                    <p class="lede">Manage product details, pricing, inventory, proof points, media, and storefront presentation without touching raw JSON.</p>
+                </div>
+            </div>
+            <div class="form-note"><noscript>This page depends on JavaScript to save the structured product editor fields.</noscript></div>
+        </section>
+
+        <form id="product-form" class="config-form" action="/admin/products" method="post" th:object="${productInput}">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" id="mediaAssetsJson" th:field="*{mediaAssetsJson}">
+            <input type="hidden" id="badgesJson" th:field="*{badgesJson}">
+            <input type="hidden" id="highlightsJson" th:field="*{highlightsJson}">
+            <input type="hidden" id="benefitsJson" th:field="*{benefitsJson}">
+            <input type="hidden" id="faqEntriesJson" th:field="*{faqEntriesJson}">
+            <input type="hidden" id="reviewSummaryJson" th:field="*{reviewSummaryJson}">
+            <input type="hidden" id="seoMetadataJson" th:field="*{seoMetadataJson}">
+            <input type="hidden" id="customAttributesJson" th:field="*{customAttributesJson}">
+            <input type="hidden" id="presentationMetadataJson" th:field="*{presentationMetadataJson}">
+
+            <section class="settings-section">
+                <div class="field-grid">
+                    <label>Slug <input th:field="*{slug}" required></label>
+                    <label>Name <input th:field="*{name}" required></label>
+                    <label>Tagline <input th:field="*{tagline}"></label>
+                    <label>SKU <input th:field="*{sku}" required></label>
+                    <label>Barcode <input th:field="*{barcode}"></label>
+                    <label>Currency
+                        <select th:field="*{currency}">
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="field-grid">
+                    <label>Short description <textarea th:field="*{shortDescription}"></textarea></label>
+                    <label>Full description <textarea th:field="*{fullDescription}"></textarea></label>
+                </div>
+            </section>
+
+            <section class="admin-columns">
+                <div class="admin-column">
+                <article class="provider-card">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">Pricing</p>
+                            <h3>Commercial setup</h3>
+                            <p class="hint-text">Define the selling price, compare-at reference, shipping profile, and tax handling as a single commercial block.</p>
+                        </div>
+                    </div>
+                    <label>Price <input type="number" step="0.01" th:field="*{price}"></label>
+                    <label>Compare-at price <input type="number" step="0.01" th:field="*{compareAtPrice}"></label>
+                    <label>Shipping profile
+                        <select th:field="*{shippingProfile}">
+                            <option value="">Choose one</option>
+                            <option value="STANDARD">Standard</option>
+                            <option value="EXPRESS">Express</option>
+                            <option value="OVERSIZE">Oversize</option>
+                            <option value="DIGITAL">Digital</option>
+                        </select>
+                    </label>
+                    <label>Tax category
+                        <select th:field="*{taxCategory}">
+                            <option value="">Choose one</option>
+                            <option value="GENERAL_MERCH">General merchandise</option>
+                            <option value="APPAREL">Apparel</option>
+                            <option value="DIGITAL_GOODS">Digital goods</option>
+                            <option value="FOOD_BEVERAGE">Food & beverage</option>
+                        </select>
+                    </label>
+                </article>
+                <section class="settings-section">
+                    <div class="utility-bar">
+                        <h2>Media assets</h2>
+                        <button class="button button-secondary" id="add-media-asset" type="button">Add media asset</button>
+                    </div>
+                    <div class="list-editor__items" id="media-assets-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No media assets yet.</div>
+                </section>
+
+                <section class="admin-settings-grid">
+                    <article class="settings-section">
+                        <div class="utility-bar">
+                            <h2>Badges</h2>
+                            <button class="button button-secondary" id="add-badge" type="button">Add badge</button>
+                        </div>
+                        <div class="list-editor__items" id="badges-list"></div>
+                        <div class="admin-empty-state" data-empty-state>No badges yet.</div>
+                    </article>
+                    <article class="settings-section">
+                        <div class="utility-bar">
+                            <h2>Highlights</h2>
+                            <button class="button button-secondary" id="add-highlight" type="button">Add highlight</button>
+                        </div>
+                        <div class="list-editor__items" id="highlights-list"></div>
+                        <div class="admin-empty-state" data-empty-state>No highlights yet.</div>
+                    </article>
+                    <article class="settings-section">
+                        <div class="utility-bar">
+                            <h2>Benefits</h2>
+                            <button class="button button-secondary" id="add-benefit" type="button">Add benefit</button>
+                        </div>
+                        <div class="list-editor__items" id="benefits-list"></div>
+                        <div class="admin-empty-state" data-empty-state>No benefits yet.</div>
+                    </article>
+                </section>
+
+                <section class="settings-section">
+                    <div class="utility-bar">
+                        <h2>FAQ</h2>
+                        <button class="button button-secondary" id="add-faq" type="button">Add FAQ</button>
+                    </div>
+                    <div class="list-editor__items" id="faq-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No FAQ items yet.</div>
+                </section>
+
+                <section class="settings-section">
+                    <div class="utility-bar">
+                        <h2>Custom attributes</h2>
+                        <button class="button button-secondary" id="add-custom-attribute" type="button">Add attribute</button>
+                    </div>
+                    <div class="list-editor__items" id="custom-attributes-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No custom attributes yet.</div>
+                </section>
+                </div>
+
+                <div class="admin-column">
+                <article class="provider-card">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">Inventory & availability</p>
+                            <h3>Stock and purchase options</h3>
+                            <p class="hint-text">Control whether the item is live, trackable, subscription-ready, and eligible for bundle merchandising.</p>
+                        </div>
+                    </div>
+                    <label>Inventory quantity <input type="number" th:field="*{inventoryQuantity}"></label>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Track inventory</strong>
+                            <span>Reduce overselling risk by keeping sellable stock tied to the stored quantity count.</span>
+                        </span>
+                        <input type="checkbox" th:field="*{inventoryTracking}">
+                    </label>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Product is active</strong>
+                            <span>Allow the product to appear in the storefront and related admin pickers.</span>
+                        </span>
+                        <input type="checkbox" th:field="*{active}">
+                    </label>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Subscription offers available</strong>
+                            <span>Let the offers editor create recurring purchase plans for this product.</span>
+                        </span>
+                        <input type="checkbox" th:field="*{subscriptionAvailable}">
+                    </label>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Bundle offers available</strong>
+                            <span>Allow bundle cards to be configured and positioned around the buy box.</span>
+                        </span>
+                        <input type="checkbox" th:field="*{bundleEligible}">
+                    </label>
+                    <label>Guarantee copy <textarea th:field="*{guaranteeText}"></textarea></label>
+                </article>
+
+                <section class="admin-settings-grid">
+                    <article class="provider-card">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">Review proof</p>
+                            <h3>Social validation</h3>
+                            <p class="hint-text">Summarize customer proof with a concise rating line shoppers can understand at a glance.</p>
+                        </div>
+                    </div>
+                    <label>Rating <input id="review-rating" placeholder="4.9"></label>
+                    <label>Review count <input id="review-count" placeholder="4200"></label>
+                    <label>Label <input id="review-label" placeholder="Verified buyers"></label>
+                </article>
+                <article class="provider-card">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">SEO</p>
+                            <h3>Search metadata</h3>
+                            <p class="hint-text">Provide the search title and description that should appear when the product is indexed or shared.</p>
+                        </div>
+                    </div>
+                    <label>SEO title <input id="seo-title" placeholder="Product title for search"></label>
+                    <label>SEO description <textarea id="seo-description" placeholder="Search description"></textarea></label>
+                </article>
+                    <article class="provider-card">
+                        <div class="provider-card-header">
+                            <div class="stack-sm">
+                                <p class="eyebrow">Presentation</p>
+                                <h3>Storefront behavior</h3>
+                                <p class="hint-text">Shape the product layout and decide which purchase helpers appear around the main buy box.</p>
+                            </div>
+                        </div>
+                        <label>Gallery layout
+                            <select id="gallery-layout">
+                                <option value="stacked">Stacked gallery</option>
+                                <option value="carousel">Carousel</option>
+                                <option value="grid">Grid</option>
+                            </select>
+                        </label>
+                        <label class="control-row">
+                            <span class="control-row__copy">
+                                <strong>Show compare-at price</strong>
+                                <span>Display the crossed-out reference price whenever a compare-at value is available.</span>
+                            </span>
+                            <input id="show-compare-price" type="checkbox">
+                        </label>
+                        <label class="control-row">
+                            <span class="control-row__copy">
+                                <strong>Show quantity selector</strong>
+                                <span>Let shoppers choose units before they add the item to the cart.</span>
+                            </span>
+                            <input id="show-quantity-selector" type="checkbox">
+                        </label>
+                        <label class="control-row">
+                            <span class="control-row__copy">
+                                <strong>Show sticky add-to-cart bar</strong>
+                                <span>Keep a compact buy action visible while the shopper scrolls through the product story.</span>
+                            </span>
+                            <input id="sticky-add-to-cart" type="checkbox">
+                        </label>
+                    </article>
+                </section>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit">Save product</button>
+            </div>
+        </form>
+    </main>
+</div>
+
+<template id="media-asset-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Media asset</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Path <input data-field="path" placeholder="/media/asset.svg"></label>
+            <label>Alt text <input data-field="alt" placeholder="Front product image"></label>
+        </div>
+    </div>
+</template>
+
+<template id="string-item-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Item</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <label>Value <input data-field="value"></label>
+    </div>
+</template>
+
+<template id="faq-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>FAQ item</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <label>Question <input data-field="question"></label>
+        <label>Answer <textarea data-field="answer"></textarea></label>
+        <label><input data-field="homepageVisible" type="checkbox"> Show on homepage FAQ preview</label>
+    </div>
+</template>
+
+<template id="key-value-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Attribute</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Key <input data-field="key"></label>
+            <label>Value <input data-field="value"></label>
+        </div>
+    </div>
+</template>
+</body>
+</html>

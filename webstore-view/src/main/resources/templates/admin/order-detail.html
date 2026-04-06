@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Order Detail')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('orders')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow" th:text="${order.orderNumber}">Order number</p>
+                    <h1 th:text="${order.customerName}">Customer</h1>
+                    <p class="lede" th:text="${order.email}">Email</p>
+                </div>
+                <span class="status-pill" data-state="neutral" th:text="${order.paymentStatus + ' / ' + order.fulfillmentStatus}">Statuses</span>
+            </div>
+        </section>
+
+        <section class="split-panel">
+            <div class="settings-section">
+                <h2>Line items</h2>
+                <div class="config-stack">
+                    <article class="surface-card" th:each="line : ${order.lineItems}">
+                        <strong th:text="${line.productName}">Product</strong>
+                        <span class="muted" th:text="${line.quantity + ' x ' + line.sku}">Qty</span>
+                        <span th:text="|$${#numbers.formatDecimal(line.lineTotal, 1, 2)}|">$42.00</span>
+                    </article>
+                </div>
+            </div>
+
+            <form id="shipment-form" class="settings-section" th:action="@{|/admin/orders/${order.orderNumber}/shipment|}" method="post" th:object="${shipmentInput}">
+                <input id="trackingEventsJson" type="hidden" th:field="*{trackingEventsJson}">
+                <h2>Shipment & tracking</h2>
+                <div class="field-grid">
+                    <label>Carrier <input th:field="*{carrier}"></label>
+                    <label>Tracking number <input th:field="*{trackingNumber}"></label>
+                    <label>Status
+                        <select th:field="*{status}">
+                            <option value="PENDING">Pending</option>
+                            <option value="SHIPPED">Shipped</option>
+                            <option value="IN_TRANSIT">In transit</option>
+                            <option value="DELIVERED">Delivered</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="list-editor">
+                    <div class="utility-bar">
+                        <h3>Tracking timeline</h3>
+                        <button class="button button-secondary" id="add-tracking-event" type="button">Add tracking event</button>
+                    </div>
+                    <div class="list-editor__items" id="tracking-events-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No tracking events yet.</div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Save shipment</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+
+<template id="tracking-event-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Tracking event</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Timestamp <input data-field="eventTimestamp" type="datetime-local"></label>
+            <label>Status <input data-field="status"></label>
+            <label>Location <input data-field="location"></label>
+        </div>
+        <label>Message <textarea data-field="message"></textarea></label>
+    </div>
+</template>
+</body>
+</html>

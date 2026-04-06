@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Theme Studio')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('themes')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Theme studio</p>
+                    <h1>Theme Studio</h1>
+                    <p class="lede">Edit the live theme workspace directly. The store loads `theme.css`, `theme.js`, and the known HTML snippet files immediately from the active theme directory.</p>
+                </div>
+                <div class="inline-actions">
+                    <button class="button button-secondary" type="button" data-dialog-open="theme-import-dialog">Import files</button>
+                    <a class="button button-secondary" href="/" target="_blank">Preview storefront</a>
+                </div>
+            </div>
+            <div class="alert alert-success" th:if="${param.saved}">Theme file saved.</div>
+            <div class="alert alert-success" th:if="${param.imported}">Theme files imported.</div>
+        </section>
+
+        <section class="theme-studio">
+            <aside class="settings-section">
+                <h2>Theme files</h2>
+                <div class="theme-file-list">
+                    <a th:each="fileView : ${themeFiles}"
+                       th:href="@{|/admin/themes?file=${fileView.name}|}"
+                       th:classappend="${fileView.name == selectedThemeFile} ? ' is-active'">
+                        <strong th:text="${fileView.name}">theme.css</strong>
+                        <span class="muted" th:text="${fileView.extension + ' / ' + fileView.size + ' bytes'}">css</span>
+                        <span class="status-pill" th:if="${fileView.runtimeFile}" data-state="ok">Runtime file</span>
+                    </a>
+                </div>
+            </aside>
+
+            <div class="stack-lg">
+                <form class="settings-section theme-editor" action="/admin/themes/files" method="post">
+                    <input type="hidden" name="fileName" th:value="${selectedThemeFile}">
+                    <div class="utility-bar">
+                        <div>
+                            <p class="eyebrow">Editor</p>
+                            <h2 th:text="${selectedThemeFile}">theme.css</h2>
+                        </div>
+                        <a class="button button-secondary" th:href="@{|/theme-assets/${selectedThemeFile}|}" target="_blank">Open asset</a>
+                    </div>
+                    <label>File contents
+                        <textarea name="content" th:text="${selectedThemeFileContent}"></textarea>
+                    </label>
+                    <div class="form-actions">
+                        <button type="submit">Save theme file</button>
+                    </div>
+                </form>
+
+                <section class="settings-section">
+                    <h2>Known runtime files</h2>
+                    <div class="theme-guide-grid">
+                        <article class="theme-guide-card">
+                            <strong>`theme.css`</strong>
+                            <span class="muted">Loaded on every storefront page after the base storefront styles.</span>
+                        </article>
+                        <article class="theme-guide-card">
+                            <strong>`theme.js`</strong>
+                            <span class="muted">Loaded on every storefront page after the base storefront script.</span>
+                        </article>
+                        <article class="theme-guide-card">
+                            <strong>`head.html`</strong>
+                            <span class="muted">Injected into the `&lt;head&gt;` for extra tags, fonts, or metadata.</span>
+                        </article>
+                        <article class="theme-guide-card">
+                            <strong>`body-top.html`, `body-bottom.html`</strong>
+                            <span class="muted">Injected around the storefront body content for shared markup.</span>
+                        </article>
+                        <article class="theme-guide-card">
+                            <strong>`home-top.html`, `home-bottom.html`</strong>
+                            <span class="muted">Injected around the homepage story stack.</span>
+                        </article>
+                        <article class="theme-guide-card">
+                            <strong>`product-top.html`, `product-bottom.html`, `footer.html`</strong>
+                            <span class="muted">Injected around the product template and global footer.</span>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+</div>
+
+<dialog class="dialog-card" id="theme-import-dialog">
+    <div class="dialog-body">
+        <h3>Import theme files</h3>
+        <form class="theme-import-form" action="/admin/themes/import" method="post" enctype="multipart/form-data">
+            <label>Select CSS, JS, TS, HTML, text, or markdown files
+                <input type="file" name="files" multiple>
+            </label>
+            <div class="dialog-actions">
+                <button class="button button-secondary" type="button" data-dialog-close>Cancel</button>
+                <button type="submit">Import theme files</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+</body>
+</html>
