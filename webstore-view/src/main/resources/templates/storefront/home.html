@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: storeHead(${view.page.seoMetadata['title'] ?: view.siteSettings.siteName})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: storeHeader(${view.featuredProduct.slug})}"></header>
+<th:block th:utext="${globalThemeRender.bodyTopHtml}"></th:block>
+<main class="storefront-main">
+    <th:block th:utext="${globalThemeRender.homeTopHtml}"></th:block>
+    <div class="page-shell story-stack">
+        <th:block th:each="section : ${view.sections}">
+            <div th:replace="~{fragments/store-sections :: render(${section}, ${view.featuredProduct})}"></div>
+        </th:block>
+    </div>
+    <th:block th:utext="${globalThemeRender.homeBottomHtml}"></th:block>
+</main>
+<th:block th:utext="${globalThemeRender.bodyBottomHtml}"></th:block>
+<footer th:replace="~{fragments/layout :: storeFooter()}"></footer>
+</body>
+</html>

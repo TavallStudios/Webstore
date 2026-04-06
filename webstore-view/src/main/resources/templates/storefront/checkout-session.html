@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: storeHead('Hosted Checkout Session')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: storeHeader('atlas-bottle')}"></header>
+<th:block th:utext="${globalThemeRender.bodyTopHtml}"></th:block>
+<main class="storefront-main">
+    <div class="page-shell">
+        <section class="section-card">
+            <p class="eyebrow" th:text="${checkoutSession.provider}">Provider</p>
+            <h1>Hosted checkout session ready</h1>
+            <p th:text="|Reference: ${checkoutSession.externalReference}|">Reference</p>
+            <p th:text="|Amount: $${#numbers.formatDecimal(checkoutSession.amount, 1, 2)}|">Amount</p>
+            <p th:text="${globalSiteSettings.paymentSettings['sandboxNotice']}">Sandbox note</p>
+            <form th:action="@{|/checkout/sessions/${checkoutSession.externalReference}/simulate-success|}" method="post">
+                <button type="submit">Simulate successful payment</button>
+            </form>
+        </section>
+    </div>
+</main>
+<th:block th:utext="${globalThemeRender.bodyBottomHtml}"></th:block>
+<footer th:replace="~{fragments/layout :: storeFooter()}"></footer>
+</body>
+</html>

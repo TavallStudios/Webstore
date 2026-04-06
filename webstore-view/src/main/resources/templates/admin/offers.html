@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Offers & Plans')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('offers')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Revenue tools</p>
+                    <h1 th:text="${product != null ? 'Offers & plans for ' + product.name : 'Offers & plans'}">Offers</h1>
+                    <p class="lede" th:text="${product != null ? 'Edit bundle cards and subscription plans with focused fields for badges, descriptions, pricing, and interval logic.' : 'Create a product first, then return here to manage bundles and subscription plans.'}">Edit bundle cards and subscription plans with focused fields for badges, descriptions, pricing, and interval logic.</p>
+                </div>
+                <form class="settings-inline" action="/admin/offers" method="get" th:if="${!#lists.isEmpty(products)}">
+                    <label>Product
+                        <select name="productId">
+                            <option th:each="catalogProduct : ${products}"
+                                    th:value="${catalogProduct.id}"
+                                    th:selected="${product != null and catalogProduct.id == product.id}"
+                                    th:text="${catalogProduct.name}">
+                                Product
+                            </option>
+                        </select>
+                    </label>
+                    <button class="button button-secondary" type="submit">Switch product</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="admin-card" th:if="${product == null}">
+            <div class="admin-empty-state">
+                No products are available yet. Create a product before configuring bundles or subscription plans.
+            </div>
+            <div class="form-actions">
+                <a class="button button-primary" href="/admin/products/new">Create product</a>
+            </div>
+        </section>
+
+        <section class="split-panel split-panel--wide" th:if="${product != null}">
+            <div class="settings-section">
+                <div class="utility-bar">
+                    <div>
+                        <p class="eyebrow">Bundle offers</p>
+                        <h2>Multi-unit revenue cards</h2>
+                    </div>
+                    <span class="status-pill" data-state="neutral" th:text="${#lists.size(bundleOffers) + ' configured'}">0 configured</span>
+                </div>
+                <p class="hint-text">These cards appear around the buy box and help shoppers choose higher-quantity purchases without editing raw rule data.</p>
+                <form class="provider-card" data-bundle-offer-form th:each="bundle : ${bundleOffers}" action="/admin/offers/bundles" method="post">
+                    <input type="hidden" name="id" th:value="${bundle.id}">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <input type="hidden" name="configurationJson" th:value="${bundle.configuration}">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">Configured bundle</p>
+                            <h3 th:text="${bundle.name}">Team Shelf</h3>
+                            <p class="hint-text">Use a short headline, a clear benefit statement, and a visible badge so the offer reads like a storefront card instead of internal config.</p>
+                        </div>
+                        <span class="status-pill" th:attr="data-state=${bundle.active ? 'ok' : 'neutral'}"
+                              th:text="${bundle.active ? 'Live' : 'Draft'}">Live</span>
+                    </div>
+                    <div class="field-grid field-grid--dense">
+                        <label class="field-span-full">Offer name <input name="name" th:value="${bundle.name}" required></label>
+                        <label class="field-span-full">Description <textarea name="description" th:text="${bundle.description}"></textarea></label>
+                        <label>Discount type
+                            <select name="discountType">
+                                <option value="PERCENTAGE" th:selected="${bundle.discountType == 'PERCENTAGE'}">Percentage</option>
+                                <option value="FIXED" th:selected="${bundle.discountType == 'FIXED'}">Fixed amount</option>
+                            </select>
+                        </label>
+                        <label>Discount value <input type="number" step="0.01" name="discountValue" th:value="${bundle.discountValue}"></label>
+                        <label>Bundle quantity <input type="number" name="bundleQuantity" th:value="${bundle.bundleQuantity}"></label>
+                        <label>Placement
+                            <select name="placement">
+                                <option value="buy-box" th:selected="${bundle.placement == 'buy-box'}">Buy box</option>
+                                <option value="below-buy-box" th:selected="${bundle.placement == 'below-buy-box'}">Below buy box</option>
+                                <option value="post-buy-box" th:selected="${bundle.placement == 'post-buy-box'}">Post buy box</option>
+                            </select>
+                        </label>
+                        <label class="field-span-full">Badge label <input data-field="badge" th:value="${bundle.configuration['badge']}"></label>
+                    </div>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Offer visibility</strong>
+                            <span>Keep this bundle visible on the storefront when it is ready for customers.</span>
+                        </span>
+                        <input type="checkbox" name="active" th:checked="${bundle.active}">
+                    </label>
+                    <div class="card-action-bar">
+                        <span class="hint-text" th:text="'Placement: ' + ${bundle.placement}">Placement</span>
+                        <button type="submit">Save bundle offer</button>
+                    </div>
+                </form>
+
+                <form class="provider-card" data-bundle-offer-form action="/admin/offers/bundles" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <input type="hidden" name="configurationJson" value="{}">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">New bundle offer</p>
+                            <h3>Create a quantity upgrade</h3>
+                            <p class="hint-text">Start with a plain-English headline, choose where it should appear, and save it as active only when the copy feels storefront-ready.</p>
+                        </div>
+                        <span class="status-pill" data-state="neutral">New</span>
+                    </div>
+                    <div class="field-grid field-grid--dense">
+                        <label class="field-span-full">Offer name <input name="name" required></label>
+                        <label class="field-span-full">Description <textarea name="description"></textarea></label>
+                        <label>Discount type
+                            <select name="discountType">
+                                <option value="PERCENTAGE">Percentage</option>
+                                <option value="FIXED">Fixed amount</option>
+                            </select>
+                        </label>
+                        <label>Discount value <input type="number" step="0.01" name="discountValue" value="10"></label>
+                        <label>Bundle quantity <input type="number" name="bundleQuantity" value="2"></label>
+                        <label>Placement
+                            <select name="placement">
+                                <option value="buy-box">Buy box</option>
+                                <option value="below-buy-box">Below buy box</option>
+                                <option value="post-buy-box">Post buy box</option>
+                            </select>
+                        </label>
+                        <label class="field-span-full">Badge label <input data-field="badge" placeholder="Most popular"></label>
+                    </div>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Launch immediately</strong>
+                            <span>Disable this if you want to save the offer first and review it before publishing.</span>
+                        </span>
+                        <input type="checkbox" name="active" checked>
+                    </label>
+                    <div class="card-action-bar">
+                        <span class="hint-text">Recommended for buy box or below-buy-box placement.</span>
+                        <button type="submit">Create bundle offer</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="settings-section">
+                <div class="utility-bar">
+                    <div>
+                        <p class="eyebrow">Subscription plans</p>
+                        <h2>Recurring purchase options</h2>
+                    </div>
+                    <span class="status-pill" data-state="neutral" th:text="${#lists.size(subscriptionPlans) + ' configured'}">0 configured</span>
+                </div>
+                <p class="hint-text">These plans should read like storefront membership choices, with a human interval label and a short explanation of the refill cadence.</p>
+                <form class="provider-card" data-subscription-form th:each="plan : ${subscriptionPlans}" action="/admin/offers/subscriptions" method="post">
+                    <input type="hidden" name="id" th:value="${plan.id}">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <input type="hidden" name="configurationJson" th:value="${plan.configuration}">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">Configured plan</p>
+                            <h3 th:text="${plan.name}">Monthly refresh</h3>
+                            <p class="hint-text">Give the customer-facing plan a clear name and a refill explanation that makes the cadence easy to understand.</p>
+                        </div>
+                        <span class="status-pill" th:attr="data-state=${plan.active ? 'ok' : 'neutral'}"
+                              th:text="${plan.active ? 'Live' : 'Draft'}">Live</span>
+                    </div>
+                    <div class="field-grid field-grid--dense">
+                        <label class="field-span-full">Plan name <input name="name" th:value="${plan.name}" required></label>
+                        <label>Interval label <input name="intervalLabel" th:value="${plan.intervalLabel}"></label>
+                        <label>Frequency days <input type="number" name="frequencyDays" th:value="${plan.frequencyDays}"></label>
+                        <label>Discount percent <input type="number" name="discountPercent" th:value="${plan.discountPercent}"></label>
+                        <label class="field-span-full">Plan description <textarea data-field="description" th:text="${plan.configuration['description']}"></textarea></label>
+                    </div>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Plan visibility</strong>
+                            <span>Show this subscription option as a live recurring purchase choice on the storefront.</span>
+                        </span>
+                        <input type="checkbox" name="active" th:checked="${plan.active}">
+                    </label>
+                    <div class="card-action-bar">
+                        <span class="hint-text" th:text="'Renews every ' + ${plan.frequencyDays} + ' days'">Recurring</span>
+                        <button type="submit">Save subscription plan</button>
+                    </div>
+                </form>
+
+                <form class="provider-card" data-subscription-form action="/admin/offers/subscriptions" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <input type="hidden" name="configurationJson" value="{}">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">New subscription plan</p>
+                            <h3>Create a recurring option</h3>
+                            <p class="hint-text">Use a simple interval label and explain the refill rhythm the customer will actually understand.</p>
+                        </div>
+                        <span class="status-pill" data-state="neutral">New</span>
+                    </div>
+                    <div class="field-grid field-grid--dense">
+                        <label class="field-span-full">Plan name <input name="name" required></label>
+                        <label>Interval label <input name="intervalLabel" value="Every 30 days"></label>
+                        <label>Frequency days <input type="number" name="frequencyDays" value="30"></label>
+                        <label>Discount percent <input type="number" name="discountPercent" value="5"></label>
+                        <label class="field-span-full">Plan description <textarea data-field="description"></textarea></label>
+                    </div>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Launch immediately</strong>
+                            <span>Leave this on when the plan is ready to appear in the recurring purchase selector.</span>
+                        </span>
+                        <input type="checkbox" name="active" checked>
+                    </label>
+                    <div class="card-action-bar">
+                        <span class="hint-text">Typical starting point: every 30 or 60 days.</span>
+                        <button type="submit">Create subscription plan</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
