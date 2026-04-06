@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:webstore;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  flyway:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        default_schema: public
+        jdbc:
+          time_zone: UTC
+  thymeleaf:
+    cache: false
+
+storefront:
+  media:
+    storage-path: ./target/test-media
+  theme:
+    storage-path: ./target/test-media/themes/active
