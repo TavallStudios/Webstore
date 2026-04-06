@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Onboarding</title>
+    <link rel="stylesheet" th:href="@{/platform.css}">
+</head>
+<body>
+<div class="shell">
+    <div class="nav">
+        <div class="brand">Tavall Platform</div>
+        <div class="nav-actions"><a class="chip" href="/logout">Logout</a></div>
+    </div>
+    <section class="panel">
+        <div class="eyebrow">Onboarding</div>
+        <h1>Create the workspace and first site.</h1>
+        <form th:action="@{/onboarding}" th:object="${form}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <div class="form-grid">
+                <label>Workspace name
+                    <input th:field="*{workspaceName}" placeholder="Northwind Commerce">
+                </label>
+                <label>Site name
+                    <input th:field="*{siteName}" placeholder="Northwind Store">
+                </label>
+                <label>Site slug
+                    <input th:field="*{siteSlug}" placeholder="northwind-store">
+                </label>
+                <label>Primary domain
+                    <input th:field="*{requestedDomain}" placeholder="shop.example.com">
+                </label>
+                <label>CPU cores
+                    <input th:field="*{cpuCores}" type="number" min="1" max="32">
+                </label>
+                <label>Memory MiB
+                    <input th:field="*{memoryMiB}" type="number" min="512" max="262144">
+                </label>
+                <label>Storage GiB
+                    <input th:field="*{storageGiB}" type="number" min="10" max="2048">
+                </label>
+            </div>
+            <div class="nav-actions" style="margin-top: 24px;">
+                <button class="btn btn-primary" type="submit">Create workspace and site</button>
+            </div>
+        </form>
+    </section>
+</div>
+</body>
+</html>

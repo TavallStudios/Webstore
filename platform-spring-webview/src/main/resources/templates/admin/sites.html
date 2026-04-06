@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sites</title><link rel="stylesheet" th:href="@{/admin.css}"></head>
+<body>
+<div class="shell">
+    <div class="nav"><div class="brand">Sites</div><div class="nav-links"><a href="/admin">Dashboard</a><a href="/admin/tenants">Tenants</a></div></div>
+    <section class="panel">
+        <table class="table">
+            <tr><th>Site</th><th>Tenant</th><th>Status</th><th>Resources</th><th>Domain</th><th>Publication</th></tr>
+            <tr th:each="site : ${sites}">
+                <td><a th:href="@{/admin/sites/{id}(id=${site.siteId})}" th:text="${site.siteName}">Site</a><div class="muted" th:text="${site.siteSlug}">slug</div></td>
+                <td th:text="${site.tenantDisplayName}">Tenant</td>
+                <td><span class="tag" th:text="${site.lifecycleState}">RUNNING</span></td>
+                <td th:text="${site.runtimeResources}">resources</td>
+                <td th:text="${site.primaryDomain}">domain</td>
+                <td th:text="${site.publicationVersion}">v1</td>
+            </tr>
+        </table>
+    </section>
+</div>
+</body>
+</html>

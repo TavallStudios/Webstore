@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Site Detail</title><link rel="stylesheet" th:href="@{/admin.css}"></head>
+<body>
+<div class="shell">
+    <div class="nav"><div class="brand" th:text="${detail.site.siteName}">Site</div><div class="nav-links"><a href="/admin/sites">Back to sites</a><a href="/admin/deployments">Deployments</a></div></div>
+    <div class="detail-grid">
+        <section class="panel">
+            <div class="eyebrow">Operations</div>
+            <div class="button-row">
+                <form th:action="@{/admin/sites/{id}/launch(id=${detail.site.siteId})}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn btn-primary" type="submit">Launch</button></form>
+                <form th:action="@{/admin/sites/{id}/stop(id=${detail.site.siteId})}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn" type="submit">Stop</button></form>
+                <form th:action="@{/admin/sites/{id}/restart(id=${detail.site.siteId})}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn" type="submit">Restart</button></form>
+                <form th:action="@{/admin/sites/{id}/sync(id=${detail.site.siteId})}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn" type="submit">Sync</button></form>
+                <form th:action="@{/admin/sites/{id}/mark-ready(id=${detail.site.siteId})}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn" type="submit">Mark Ready</button></form>
+                <form th:action="@{/admin/sites/{id}/destroy(id=${detail.site.siteId})}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn" type="submit">Destroy</button></form>
+            </div>
+            <div class="stats" style="margin-top: 18px;">
+                <div class="card"><div class="eyebrow">Lifecycle</div><div class="tag" th:text="${detail.site.lifecycleState}">RUNNING</div></div>
+                <div class="card"><div class="eyebrow">Runtime phase</div><div class="tag" th:text="${detail.runtimePhase}">Running</div></div>
+                <div class="card"><div class="eyebrow">Publication</div><div th:text="${detail.site.publicationVersion}">v1</div></div>
+            </div>
+            <p class="muted" th:text="${detail.runtimeMessage}">Runtime status message.</p>
+            <div class="card" th:if="${compatibilityReport != null}">
+                <div class="eyebrow">KubeVirt target profile</div>
+                <strong th:text="${compatibilityReport.infrastructureProfile}">AUTO</strong>
+                <div class="muted" th:text="${compatibilityReport.message}">Compatibility summary.</div>
+                <div class="muted" th:if="${!#maps.isEmpty(compatibilityReport.nodeSelector)}" th:text="'Node selector: ' + ${compatibilityReport.nodeSelector}">selector</div>
+                <div class="muted" th:text="'KubeVirt emulation enabled: ' + ${compatibilityReport.emulationEnabled}">emulation</div>
+                <div class="muted" th:text="'Schedulable nodes: ' + ${compatibilityReport.schedulableNodeCount} + ' | KVM-capable nodes: ' + ${compatibilityReport.kvmCapableNodeCount} + ' | arm64 nodes: ' + ${compatibilityReport.arm64NodeCount} + ' | x86 nodes: ' + ${compatibilityReport.x86NodeCount}">counts</div>
+            </div>
+            <div class="card-stack">
+                <div class="card">
+                    <h3>Switch infrastructure target</h3>
+                    <form th:action="@{/admin/sites/{id}/infrastructure-profile(id=${detail.site.siteId})}" th:object="${infrastructureForm}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <select th:field="*{infrastructureProfile}">
+                            <option th:each="profile : ${infrastructureProfiles}" th:value="${profile}" th:text="${profile}">AUTO</option>
+                        </select>
+                        <button class="btn btn-primary" type="submit">Apply target profile</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Mutate runtime resources</h3>
+                    <form th:action="@{/admin/sites/{id}/resources(id=${detail.site.siteId})}" th:object="${resourceForm}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <input type="number" th:field="*{cpuCores}" placeholder="CPU cores">
+                        <input type="number" th:field="*{memoryMiB}" placeholder="Memory MiB">
+                        <input type="number" th:field="*{storageGiB}" placeholder="Storage GiB">
+                        <button class="btn btn-primary" type="submit">Apply resources</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Assign domain</h3>
+                    <form th:action="@{/admin/sites/{id}/domain(id=${detail.site.siteId})}" th:object="${domainForm}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <input th:field="*{host}" placeholder="shop.example.com">
+                        <button class="btn btn-primary" type="submit">Assign domain</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Publish version</h3>
+                    <form th:action="@{/admin/sites/{id}/publish(id=${detail.site.siteId})}" th:object="${publicationForm}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <input th:field="*{versionLabel}" placeholder="v2">
+                        <input th:field="*{buildReference}" placeholder="webstore-view:2026.03.27">
+                        <button class="btn btn-primary" type="submit">Publish</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="card-stack">
+            <div class="card"><div class="eyebrow">Runtime mapping</div><p class="muted" th:text="${detail.runtimeNamespace}">namespace</p><p class="muted" th:text="${detail.virtualMachineName}">vm</p><p class="muted" th:text="${detail.serviceName}">service</p><p class="muted" th:text="${detail.ingressName}">ingress</p></div>
+            <div class="card"><div class="eyebrow">Domains</div><div th:each="domain : ${detail.domains}"><strong th:text="${domain.host}">host</strong><div class="muted" th:text="${domain.status}">status</div></div></div>
+            <div class="card"><div class="eyebrow">Publications</div><div th:each="publication : ${detail.publications}"><strong th:text="${publication.versionLabel}">v1</strong><div class="muted" th:text="${publication.buildReference}">build</div></div></div>
+            <div class="card"><div class="eyebrow">Recent deployment history</div><div th:each="deployment : ${detail.deployments}"><strong th:text="${deployment.actionType}">LAUNCH</strong><div class="muted" th:text="${deployment.status}">status</div></div></div>
+            <div class="card"><div class="eyebrow">Status history</div><div th:each="history : ${detail.statusHistory}"><strong th:text="${history.previousState + ' -> ' + history.newState}">DRAFT -> RUNNING</strong><div class="muted" th:text="${history.reason}">reason</div></div></div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

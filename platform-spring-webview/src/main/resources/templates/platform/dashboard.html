@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Dashboard</title>
+    <link rel="stylesheet" th:href="@{/platform.css}">
+</head>
+<body>
+<div class="shell">
+    <div class="nav">
+        <div class="brand">Tavall Platform</div>
+        <div class="nav-actions">
+            <span class="chip" th:text="${currentUser != null ? currentUser.displayName : 'Platform user'}">Platform user</span>
+            <a class="chip" href="/logout">Logout</a>
+        </div>
+    </div>
+    <div class="dashboard-grid">
+        <aside class="panel">
+            <div class="eyebrow">Workspace</div>
+            <h2 th:text="${currentUser != null ? currentUser.email : 'Tenant'}">Tenant</h2>
+            <p class="muted" th:text="${onboarding != null ? onboarding.readinessState : 'No onboarding state'}">Readiness</p>
+            <div class="tag" th:if="${onboarding != null}" th:text="${onboarding.readinessState}">ACTIVE</div>
+        </aside>
+        <section class="panel">
+            <div class="eyebrow">Sites</div>
+            <h1>Your tenant sites</h1>
+            <div class="card-grid">
+                <div class="site-card" th:each="site : ${sites}">
+                    <div class="tag" th:text="${site.lifecycleState}">READY_TO_LAUNCH</div>
+                    <h3 th:text="${site.siteName}">Site</h3>
+                    <p class="muted" th:text="${site.slug}">site-slug</p>
+                    <p class="muted">Current publication: <span th:text="${site.currentPublicationId}">publication</span></p>
+                </div>
+            </div>
+            <p class="footer-note">The master admin dashboard handles platform-wide launch, stop, restart, destroy, and runtime mutation operations.</p>
+        </section>
+    </div>
+</div>
+</body>
+</html>

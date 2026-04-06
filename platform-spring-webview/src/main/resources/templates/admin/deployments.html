@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Deployments</title><link rel="stylesheet" th:href="@{/admin.css}"></head>
+<body>
+<div class="shell">
+    <div class="nav"><div class="brand">Deployment History</div><div class="nav-links"><a href="/admin">Dashboard</a><a href="/admin/sites">Sites</a></div></div>
+    <section class="panel">
+        <table class="table">
+            <tr><th>Site</th><th>Action</th><th>Status</th><th>Version</th><th>Message</th></tr>
+            <tr th:each="deployment : ${deployments}">
+                <td th:text="${deployment.siteName}">Site</td>
+                <td th:text="${deployment.actionType}">Action</td>
+                <td th:text="${deployment.status}">Status</td>
+                <td th:text="${deployment.versionLabel}">Version</td>
+                <td th:text="${deployment.message}">Message</td>
+            </tr>
+        </table>
+    </section>
+</div>
+</body>
+</html>

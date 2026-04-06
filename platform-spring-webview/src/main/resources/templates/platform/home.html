@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tavall Platform</title>
+    <link rel="stylesheet" th:href="@{/platform.css}">
+</head>
+<body>
+<div class="shell">
+    <div class="nav">
+        <div class="brand">Tavall Platform</div>
+        <div class="nav-links">
+            <a href="/features">Features</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/about">About</a>
+        </div>
+        <div class="nav-actions">
+            <a class="chip" href="/login">Sign in</a>
+            <a class="btn btn-primary" href="/login">Start onboarding</a>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div>
+            <div class="eyebrow">Multi-tenant commerce platform</div>
+            <h1>One platform shell, isolated tenant runtimes, and operational control in one repo.</h1>
+            <p class="muted">Launch storefront VMs through KubeVirt, onboard tenants with social login only, and keep platform state in PostgreSQL with clean relational models and JSONB where flexibility actually helps.</p>
+            <div class="nav-actions">
+                <a class="btn btn-primary" href="/login">Sign in with a provider</a>
+                <a class="chip" href="/features">Inspect the control model</a>
+            </div>
+        </div>
+        <div class="panel">
+            <h3>Platform flow</h3>
+            <div class="feature-grid">
+                <div>
+                    <strong>1. Identity</strong>
+                    <p class="muted">Google, GitHub, Discord, or Microsoft login creates the platform account.</p>
+                </div>
+                <div>
+                    <strong>2. Onboarding</strong>
+                    <p class="muted">Tenant workspace, first site, and runtime resource defaults are captured immediately.</p>
+                </div>
+                <div>
+                    <strong>3. Control plane</strong>
+                    <p class="muted">Tenant sites become explicit runtime definitions, publications, deployments, jobs, and audit records.</p>
+                </div>
+                <div>
+                    <strong>4. Isolation</strong>
+                    <p class="muted">Each launched storefront is modeled as its own VM-backed runtime with routing and state tracking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stat-grid">
+        <div class="grid-card"><h3>Platform website</h3><p class="muted">SSR landing pages, auth entry, onboarding, and tenant dashboard shell.</p></div>
+        <div class="grid-card"><h3>Control API</h3><p class="muted">Launch, stop, restart, destroy, sync, publish, and mutate runtimes with explicit site lifecycle states.</p></div>
+        <div class="grid-card"><h3>Standalone runtime</h3><p class="muted">The storefront app now stands alone as `webstore-view`, ready to run per tenant site.</p></div>
+    </section>
+
+    <p class="footer-note" th:if="${providers.isEmpty()}">No social providers are configured yet. Supply OAuth client registrations through environment variables and the login page will light up automatically.</p>
+</div>
+</body>
+</html>
