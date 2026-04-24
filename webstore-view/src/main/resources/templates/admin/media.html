@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Media Library')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('media')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Filesystem media</p>
+                    <h1>Media Library</h1>
+                    <p class="lede">Upload product and campaign assets, then reuse their public paths anywhere across the store.</p>
+                </div>
+            </div>
+            <form class="config-form" action="/admin/media" method="post" enctype="multipart/form-data">
+                <label>Upload new asset <input type="file" name="file"></label>
+                <div class="form-actions">
+                    <button type="submit">Upload asset</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="admin-card">
+            <div class="section-list">
+                <div class="admin-list-row" th:each="asset : ${assets}">
+                    <strong th:text="${asset.fileName}">Asset</strong>
+                    <a th:href="${asset.publicPath}" th:text="${asset.publicPath}" target="_blank">Path</a>
+                    <span class="muted" th:text="${asset.size + ' bytes'}">Size</span>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

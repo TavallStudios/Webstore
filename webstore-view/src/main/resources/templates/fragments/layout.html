@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="storeHead(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Storefront</title>
+    <link rel="icon" th:if="${globalSiteSettings.faviconPath}" th:href="${globalSiteSettings.faviconPath}">
+    <script type="module" crossorigin th:if="${globalDevAssetOrigin != null}" th:src="${globalDevAssetOrigin + '/@vite/client'}"></script>
+    <link rel="stylesheet" th:if="${globalDevAssetOrigin != null}" th:href="${globalDevAssetOrigin + '/assets/core/base.css'}">
+    <link rel="stylesheet" th:if="${globalDevAssetOrigin != null}" th:href="${globalDevAssetOrigin + '/assets/storefront/storefront.css'}">
+    <link rel="stylesheet" th:unless="${globalDevAssetOrigin != null}" th:href="@{/assets/core/base.css(v=${globalAssetVersion})}">
+    <link rel="stylesheet" th:unless="${globalDevAssetOrigin != null}" th:href="@{/assets/storefront/storefront.css(v=${globalAssetVersion})}">
+    <link rel="stylesheet" th:if="${globalThemeRender.cssAvailable}" href="/theme-assets/theme.css">
+    <script type="module" crossorigin th:if="${globalDevAssetOrigin != null}" th:src="${globalDevAssetOrigin + '/assets/storefront/storefront.js'}"></script>
+    <script defer th:unless="${globalDevAssetOrigin != null}" th:src="@{/assets/storefront/storefront.js(v=${globalAssetVersion})}"></script>
+    <script defer th:if="${globalThemeRender.scriptAvailable}" src="/theme-assets/theme.js"></script>
+    <style th:inline="css">
+        :root {
+            --store-bg: [(${globalSiteSettings.brandPalette['background']})];
+            --store-surface: [(${globalSiteSettings.brandPalette['surface']})];
+            --store-ink: [(${globalSiteSettings.brandPalette['ink']})];
+            --store-accent: [(${globalSiteSettings.brandPalette['accent']})];
+            --store-accent-deep: [(${globalSiteSettings.brandPalette['accentDeep']})];
+            --store-muted: [(${globalSiteSettings.brandPalette['muted']})];
+            --headline-font: [(${globalSiteSettings.typography['headline']})];
+            --body-font: [(${globalSiteSettings.typography['body']})];
+            --mono-font: [(${globalSiteSettings.typography['mono']})];
+        }
+    </style>
+    <th:block th:utext="${globalThemeRender.headHtml}"></th:block>
+</head>
+<head th:fragment="adminHead(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Store Control</title>
+    <link rel="icon" th:if="${globalSiteSettings.faviconPath}" th:href="${globalSiteSettings.faviconPath}">
+    <script type="module" crossorigin th:if="${globalDevAssetOrigin != null}" th:src="${globalDevAssetOrigin + '/@vite/client'}"></script>
+    <link rel="stylesheet" th:if="${globalDevAssetOrigin != null}" th:href="${globalDevAssetOrigin + '/assets/core/base.css'}">
+    <link rel="stylesheet" th:if="${globalDevAssetOrigin != null}" th:href="${globalDevAssetOrigin + '/assets/admin/admin.css'}">
+    <link rel="stylesheet" th:unless="${globalDevAssetOrigin != null}" th:href="@{/assets/core/base.css(v=${globalAssetVersion})}">
+    <link rel="stylesheet" th:unless="${globalDevAssetOrigin != null}" th:href="@{/assets/admin/admin.css(v=${globalAssetVersion})}">
+    <style th:inline="css">
+        :root {
+            --store-bg: [(${globalSiteSettings.brandPalette['background']})];
+            --store-surface: [(${globalSiteSettings.brandPalette['surface']})];
+            --store-ink: [(${globalSiteSettings.brandPalette['ink']})];
+            --store-accent: [(${globalSiteSettings.brandPalette['accent']})];
+            --store-accent-deep: [(${globalSiteSettings.brandPalette['accentDeep']})];
+            --store-muted: [(${globalSiteSettings.brandPalette['muted']})];
+            --page-bg: [(${globalSiteSettings.brandPalette['background']})];
+            --page-surface: [(${globalSiteSettings.brandPalette['surface']})];
+            --page-ink: [(${globalSiteSettings.brandPalette['ink']})];
+            --page-muted: [(${globalSiteSettings.brandPalette['muted']})];
+            --headline-font: [(${globalSiteSettings.typography['headline']})];
+            --body-font: [(${globalSiteSettings.typography['body']})];
+            --mono-font: [(${globalSiteSettings.typography['mono']})];
+        }
+    </style>
+    <script type="module" crossorigin th:if="${globalDevAssetOrigin != null}" th:src="${globalDevAssetOrigin + '/assets/admin/admin.js'}"></script>
+    <script defer th:unless="${globalDevAssetOrigin != null}" th:src="@{/assets/admin/admin.js(v=${globalAssetVersion})}"></script>
+</head>
+<body>
+<header th:fragment="storeHeader(productSlug)" class="store-header">
+    <div class="announcement-bar" th:if="${!#lists.isEmpty(globalSiteSettings.announcementBars)}">
+        <span th:text="${globalSiteSettings.announcementBars[0]['message']}">Announcement</span>
+    </div>
+    <div class="store-shell header-shell">
+        <a class="brand-lockup" href="/">
+            <span class="brand-wordmark" th:text="${globalSiteSettings.siteName}">Storefront</span>
+        </a>
+        <nav class="header-nav">
+            <a href="/">Home</a>
+            <a th:href="@{|/products/${productSlug}|}">Product</a>
+            <a href="/tracking">Track order</a>
+            <a href="/admin">Admin</a>
+            <a class="header-cart" href="/cart">Cart <span th:text="${globalCartItemCount}">0</span></a>
+        </nav>
+    </div>
+</header>
+
+<footer th:fragment="storeFooter()" class="store-footer">
+    <div class="store-shell footer-grid">
+        <div>
+            <h4 th:text="${globalSiteSettings.siteName}">Storefront</h4>
+            <p th:text="${globalSiteSettings.shippingMessage}">Shipping message</p>
+            <p th:text="${globalSiteSettings.returnMessage}">Return message</p>
+        </div>
+        <div th:if="${globalSiteSettings.footerContent['columns']}">
+            <div class="footer-column" th:each="column : ${globalSiteSettings.footerContent['columns']}">
+                <h5 th:text="${column['title']}">Column</h5>
+                <a th:each="link : ${column['links']}" th:href="${link['href']}" th:text="${link['label']}">Link</a>
+            </div>
+        </div>
+    </div>
+    <div class="store-shell footer-fine-print" th:text="${globalSiteSettings.footerContent['finePrint']}">Footer detail</div>
+    <div class="theme-insert" th:utext="${globalThemeRender.footerHtml}"></div>
+</footer>
+
+<aside th:fragment="adminSidebar(activePage)" class="admin-sidebar">
+    <div class="admin-brand-lockup">
+        <a class="admin-brand" href="/admin">Tavall Webstore</a>
+        <span class="admin-brand-meta">Production editing, payment setup, content operations, and theme control.</span>
+    </div>
+
+    <nav class="admin-nav-section">
+        <span class="admin-nav-label">Command</span>
+        <a class="admin-nav-link" th:classappend="${activePage == 'dashboard'} ? ' is-active'" href="/admin">
+            <span>Command Center</span><span>Overview</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'engagement'} ? ' is-active'" href="/admin/engagement">
+            <span>Engagement</span><span>Live toggles</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'orders'} ? ' is-active'" href="/admin/orders">
+            <span>Orders</span><span>Fulfillment</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'media'} ? ' is-active'" href="/admin/media">
+            <span>Media Library</span><span>Assets</span>
+        </a>
+    </nav>
+
+    <nav class="admin-nav-section">
+        <span class="admin-nav-label">Commerce</span>
+        <a class="admin-nav-link" th:classappend="${activePage == 'products'} ? ' is-active'" href="/admin/products">
+            <span>Catalog</span><span>Products</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'offers'} ? ' is-active'" href="/admin/offers">
+            <span>Offers & Plans</span><span>Bundles</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'payments'} ? ' is-active'" href="/admin/payments">
+            <span>Payments</span><span>Stripe / PayPal</span>
+        </a>
+    </nav>
+
+    <nav class="admin-nav-section">
+        <span class="admin-nav-label">Experience</span>
+        <a class="admin-nav-link" th:classappend="${activePage == 'site-settings'} ? ' is-active'" href="/admin/site-settings">
+            <span>Brand & Messaging</span><span>Store voice</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'analytics'} ? ' is-active'" href="/admin/analytics">
+            <span>Growth & SEO</span><span>Analytics</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'home-page'} ? ' is-active'" href="/admin/pages/home">
+            <span>Home Story</span><span>Homepage</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'product-page'} ? ' is-active'" href="/admin/pages/product-default">
+            <span>Product Story</span><span>Template</span>
+        </a>
+        <a class="admin-nav-link" th:classappend="${activePage == 'themes'} ? ' is-active'" href="/admin/themes">
+            <span>Theme Studio</span><span>Raw files</span>
+        </a>
+    </nav>
+</aside>
+</body>
+</html>

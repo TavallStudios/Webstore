@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<section th:fragment="render(section, product)" th:switch="${section.sectionType}" class="story-section">
+    <div th:case="'hero'" class="section-card hero-grid">
+        <div class="hero-copy">
+            <p class="eyebrow" th:text="${section.configuration['eyebrow']}">Eyebrow</p>
+            <h1 th:text="${section.configuration['title']}">Hero title</h1>
+            <p class="lede" th:text="${section.configuration['body']}">Hero body</p>
+            <div class="hero-actions">
+                <a class="button button-primary" th:href="${section.configuration['ctaHref']}" th:text="${section.configuration['ctaLabel']}">Shop now</a>
+                <a class="button button-secondary" th:href="${section.configuration['secondaryHref']}" th:text="${section.configuration['secondaryLabel']}">Learn more</a>
+            </div>
+        </div>
+        <div class="hero-media">
+            <img th:src="${section.configuration['mediaPath']}" th:alt="${product.name}" loading="eager">
+        </div>
+    </div>
+    <div th:case="'trust-strip'" class="section-card trust-strip">
+        <p class="trust-headline" th:text="${section.configuration['headline']}">Trust headline</p>
+        <div class="trust-badge-row">
+            <div class="trust-badge" th:each="badge : ${globalSiteSettings.trustBadges}">
+                <strong th:text="${badge['label']}">Badge</strong>
+                <span th:text="${badge['detail']}">Detail</span>
+            </div>
+        </div>
+    </div>
+    <div th:case="'benefits'" class="section-card">
+        <div class="section-heading">
+            <p class="eyebrow">Benefits</p>
+            <h2 th:text="${section.configuration['title']}">Benefits</h2>
+        </div>
+        <div class="card-grid three-up">
+            <article class="info-card" th:each="item : ${section.configuration['items']}">
+                <h3 th:text="${item['title']}">Title</h3>
+                <p th:text="${item['body']}">Body</p>
+            </article>
+        </div>
+    </div>
+    <div th:case="'lifestyle'" class="section-card lifestyle-grid" id="how-it-works">
+        <div>
+            <p class="eyebrow">Daily use</p>
+            <h2 th:text="${section.configuration['title']}">Lifestyle title</h2>
+            <p th:text="${section.configuration['body']}">Lifestyle body</p>
+        </div>
+        <img th:src="${section.configuration['mediaPath']}" th:alt="${product.name}" loading="lazy">
+    </div>
+    <div th:case="'reviews'" class="section-card">
+        <div class="section-heading">
+            <p class="eyebrow">Reviews</p>
+            <h2 th:text="${section.configuration['title']}">Review title</h2>
+        </div>
+        <div class="card-grid three-up">
+            <blockquote class="quote-card" th:each="item : ${section.configuration['items']}">
+                <p th:text="${item['quote']}">Quote</p>
+                <footer th:text="${item['name']}">Name</footer>
+            </blockquote>
+        </div>
+    </div>
+    <div th:case="'comparison'" class="section-card">
+        <div class="section-heading">
+            <p class="eyebrow">Comparison</p>
+            <h2 th:text="${section.configuration['title']}">Comparison title</h2>
+        </div>
+        <table class="comparison-table">
+            <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Atlas</th>
+                <th>Alternatives</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${section.configuration['rows']}">
+                <td th:text="${row['feature']}">Feature</td>
+                <td th:text="${row['atlas']}">Atlas</td>
+                <td th:text="${row['other']}">Other</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:case="'faq-preview'" class="section-card">
+        <div class="section-heading">
+            <p class="eyebrow">FAQ</p>
+            <h2 th:text="${section.configuration['title']}">FAQ title</h2>
+        </div>
+        <div class="faq-list">
+            <details th:each="faq, faqStat : ${product.faqEntries}" th:if="${faqStat.index < section.configuration['limit']}">
+                <summary th:text="${faq['question']}">Question</summary>
+                <p th:text="${faq['answer']}">Answer</p>
+            </details>
+        </div>
+    </div>
+    <div th:case="'cta'" class="section-card cta-band">
+        <p class="eyebrow">Ready</p>
+        <h2 th:text="${section.configuration['title']}">CTA title</h2>
+        <p th:text="${section.configuration['body']}">CTA body</p>
+        <a class="button button-primary" th:href="${section.configuration['ctaHref']}" th:text="${section.configuration['ctaLabel']}">Act</a>
+    </div>
+    <div th:case="'specs'" class="section-card">
+        <div class="section-heading">
+            <p class="eyebrow">Specs</p>
+            <h2 th:text="${section.configuration['title']}">Specs</h2>
+        </div>
+        <dl class="spec-grid">
+            <div th:each="item : ${section.configuration['items']}">
+                <dt th:text="${item['label']}">Label</dt>
+                <dd th:text="${item['value']}">Value</dd>
+            </div>
+        </dl>
+    </div>
+    <div th:case="*" class="section-card">
+        <h2 th:text="${section.displayName}">Section</h2>
+        <pre th:text="${section.configuration}">Configuration</pre>
+    </div>
+</section>
+</body>
+</html>

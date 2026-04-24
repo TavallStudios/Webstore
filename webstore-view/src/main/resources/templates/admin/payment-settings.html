@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Payments')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('payments')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Payment connections</p>
+                    <h1>Payments</h1>
+                    <p class="lede">Connect Stripe and PayPal, choose the default checkout path, and define basic payment handling rules without exposing raw configuration JSON.</p>
+                </div>
+                <button class="button button-secondary" type="button" data-dialog-open="payment-security-dialog">Security notes</button>
+            </div>
+            <div class="alert alert-success" th:if="${param.saved}">Payment settings were updated.</div>
+        </section>
+
+        <form class="config-form" action="/admin/payments" method="post" th:object="${paymentSettingsInput}">
+            <section class="settings-section">
+                <div class="provider-card-header">
+                    <div class="stack-sm">
+                        <p class="eyebrow">Checkout behavior</p>
+                        <h2>Storefront payment flow</h2>
+                        <p class="hint-text">Choose the live checkout mode, the preferred provider, and the extra safety rules shoppers should feel but never have to decipher.</p>
+                    </div>
+                </div>
+                <div class="field-grid field-grid--dense">
+                    <label>Checkout mode
+                        <select th:field="*{mode}">
+                            <option value="sandbox">Sandbox</option>
+                            <option value="production">Production</option>
+                        </select>
+                    </label>
+                    <label>Preferred provider
+                        <select th:field="*{defaultProvider}">
+                            <option value="STRIPE">Stripe</option>
+                            <option value="PAYPAL">PayPal</option>
+                        </select>
+                    </label>
+                    <label class="field-span-full">Storefront payment note
+                        <textarea th:field="*{sandboxNotice}" placeholder="Shown on hosted checkout and payment-related pages."></textarea>
+                    </label>
+                </div>
+                <div class="admin-settings-grid">
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Manual review protection</strong>
+                            <span>Hold riskier transactions for review before the order moves deeper into fulfillment.</span>
+                        </span>
+                        <input type="checkbox" th:field="*{manualReviewEnabled}">
+                    </label>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Saved payment methods</strong>
+                            <span>Offer returning shoppers faster checkout where the selected gateway supports it.</span>
+                        </span>
+                        <input type="checkbox" th:field="*{saveCardsEnabled}">
+                    </label>
+                </div>
+            </section>
+
+            <section class="admin-settings-grid">
+                <article class="provider-card is-highlighted">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">Stripe</p>
+                            <h3>Card and wallet processing</h3>
+                            <p class="hint-text">Keep the public key visible, leave secret fields blank to preserve what is already stored, and switch live mode only when the final credential set is complete.</p>
+                        </div>
+                    </div>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Enable Stripe</strong>
+                            <span>Show Stripe as an available hosted checkout path.</span>
+                        </span>
+                        <input type="checkbox" th:field="*{stripeEnabled}">
+                    </label>
+                    <label>Publishable key <input th:field="*{stripePublishableKey}" placeholder="pk_live_..."></label>
+                    <label>Secret key <input type="password" th:field="*{stripeSecretKey}" th:placeholder="${maskedStripeSecret ?: 'sk_live_...'}"></label>
+                    <label>Webhook secret <input type="password" th:field="*{stripeWebhookSecret}" th:placeholder="${maskedStripeWebhookSecret ?: 'whsec_...'}"></label>
+                    <label>Connected account ID <input th:field="*{stripeAccountId}" placeholder="acct_..."></label>
+                    <label>Statement descriptor <input th:field="*{stripeStatementDescriptor}" placeholder="TAVALL STORE"></label>
+                </article>
+
+                <article class="provider-card">
+                    <div class="provider-card-header">
+                        <div class="stack-sm">
+                            <p class="eyebrow">PayPal</p>
+                            <h3>Wallet and alternative checkout</h3>
+                            <p class="hint-text">Configure the merchant-facing identifiers and enable PayPal only when the account is ready to receive live production traffic.</p>
+                        </div>
+                    </div>
+                    <label class="control-row">
+                        <span class="control-row__copy">
+                            <strong>Enable PayPal</strong>
+                            <span>Offer PayPal as a live checkout option in the hosted payment flow.</span>
+                        </span>
+                        <input type="checkbox" th:field="*{paypalEnabled}">
+                    </label>
+                    <label>Client ID <input th:field="*{paypalClientId}" placeholder="Client ID"></label>
+                    <label>Secret <input type="password" th:field="*{paypalSecret}" th:placeholder="${maskedPaypalSecret ?: 'Secret'}"></label>
+                    <label>Webhook ID <input th:field="*{paypalWebhookId}" placeholder="Webhook ID"></label>
+                    <label>Merchant ID <input th:field="*{paypalMerchantId}" placeholder="Merchant ID"></label>
+                    <label>Statement descriptor <input th:field="*{paypalStatementDescriptor}" placeholder="TAVALL STORE"></label>
+                </article>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit">Save payment setup</button>
+            </div>
+        </form>
+    </main>
+</div>
+
+<dialog class="dialog-card" id="payment-security-dialog">
+    <div class="dialog-body">
+        <h3>Security notes</h3>
+        <p class="muted">Leave any secret field blank to keep the currently saved credential. Only publishable identifiers are shown back in the editor.</p>
+        <p class="muted">Switch to production mode only after adding the live key pair, webhook secret, and final storefront note.</p>
+        <div class="dialog-actions">
+            <button class="button button-secondary" type="button" data-dialog-close>Close</button>
+        </div>
+    </div>
+</dialog>
+</body>
+</html>

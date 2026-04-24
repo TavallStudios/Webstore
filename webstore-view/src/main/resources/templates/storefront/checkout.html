@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: storeHead('Checkout')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: storeHeader('atlas-bottle')}"></header>
+<th:block th:utext="${globalThemeRender.bodyTopHtml}"></th:block>
+<main class="storefront-main">
+    <div class="page-shell checkout-grid">
+        <section class="section-card">
+            <h1>Checkout</h1>
+            <form class="checkout-form" action="/checkout/sessions" method="post">
+                <label>Payment provider
+                    <select name="provider">
+                        <option value="STRIPE"
+                                th:if="${globalSiteSettings.paymentSettings['stripeEnabled'] != false}"
+                                th:selected="${globalSiteSettings.paymentSettings['defaultProvider'] == 'STRIPE'}">Stripe</option>
+                        <option value="PAYPAL"
+                                th:if="${globalSiteSettings.paymentSettings['paypalEnabled'] == true}"
+                                th:selected="${globalSiteSettings.paymentSettings['defaultProvider'] == 'PAYPAL'}">PayPal</option>
+                    </select>
+                </label>
+                <label>Name <input name="customerName" required></label>
+                <label>Email <input type="email" name="email" required></label>
+                <label>Address line 1 <input name="addressLine1" required></label>
+                <label>Address line 2 <input name="addressLine2"></label>
+                <label>City <input name="city" required></label>
+                <label>State <input name="state" required></label>
+                <label>Postal code <input name="postalCode" required></label>
+                <label>Country <input name="country" value="US" required></label>
+                <label>Discount code <input name="discountCode" placeholder="ATLAS10"></label>
+                <button type="submit">Create hosted checkout session</button>
+            </form>
+        </section>
+        <aside class="section-card">
+            <h2>Cart summary</h2>
+            <p th:text="|Items: ${#lists.size(cart.lineItems)}|">Items</p>
+            <p th:text="|Subtotal: $${#numbers.formatDecimal(cart.subtotalAmount, 1, 2)}|">Subtotal</p>
+            <p th:text="|Shipping: $${#numbers.formatDecimal(cart.shippingAmount, 1, 2)}|">Shipping</p>
+            <p th:text="|Total before codes: $${#numbers.formatDecimal(cart.totalAmount, 1, 2)}|">Total</p>
+            <p class="eyebrow">Sandbox note</p>
+            <p th:text="${globalSiteSettings.paymentSettings['sandboxNotice']}">Provider note</p>
+        </aside>
+    </div>
+</main>
+<th:block th:utext="${globalThemeRender.bodyBottomHtml}"></th:block>
+<footer th:replace="~{fragments/layout :: storeFooter()}"></footer>
+</body>
+</html>

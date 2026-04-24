@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: storeHead(${view.product.seoMetadata['title'] ?: view.product.name})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: storeHeader(${view.product.slug})}"></header>
+<th:block th:utext="${globalThemeRender.bodyTopHtml}"></th:block>
+<main class="storefront-main">
+    <th:block th:utext="${globalThemeRender.productTopHtml}"></th:block>
+    <div class="page-shell product-page">
+        <section class="section-card product-grid">
+            <div class="gallery-stack">
+                <img th:each="asset : ${view.product.mediaAssets}" th:src="${asset['path']}" th:alt="${asset['alt']}" loading="eager">
+            </div>
+            <div class="buy-box" id="buy-box">
+                <div class="pill-row">
+                    <span class="pill" th:each="badge : ${view.product.badges}" th:text="${badge}">Badge</span>
+                </div>
+                <h1 th:text="${view.product.name}">Product</h1>
+                <p class="lede" th:text="${view.product.tagline}">Tagline</p>
+                <div class="price-line">
+                    <span class="price" th:text="|$${#numbers.formatDecimal(view.product.price, 1, 2)}|">$42.00</span>
+                    <span class="compare-at" th:if="${view.product.compareAtPrice}" th:text="|$${#numbers.formatDecimal(view.product.compareAtPrice, 1, 2)}|">$52.00</span>
+                </div>
+                <p th:text="${view.product.shortDescription}">Short description</p>
+                <div class="pill-row">
+                    <span class="pill" th:text="${view.product.reviewSummary['rating'] + ' stars'}">4.9 stars</span>
+                    <span class="pill" th:text="${view.siteSettings.shippingMessage}">Shipping</span>
+                    <span class="pill" th:text="${view.product.guaranteeText}">Guarantee</span>
+                </div>
+                <form action="/cart/items" method="post">
+                    <input type="hidden" name="productId" th:value="${view.product.id}">
+                    <label>Finish
+                        <select name="variantId">
+                            <option value="">Default finish</option>
+                            <option th:each="variant : ${view.product.variants}" th:value="${variant.id}" th:text="${variant.optionValue}">Variant</option>
+                        </select>
+                    </label>
+                    <label th:if="${view.product.presentationMetadata['showQuantitySelector']}">Quantity
+                        <input type="number" name="quantity" min="1" value="1">
+                    </label>
+                    <button type="submit">Add to cart</button>
+                </form>
+                <div class="offer-list" th:if="${globalFeatureFlags['subscriptions_enabled']}">
+                    <article class="offer-card" th:each="plan : ${view.product.subscriptionPlans}">
+                        <div>
+                            <strong th:text="${plan.name}">Plan</strong>
+                            <p th:text="${plan.intervalLabel + ' / Save ' + plan.discountPercent + '%'}">Plan detail</p>
+                        </div>
+                        <form action="/cart/items" method="post">
+                            <input type="hidden" name="productId" th:value="${view.product.id}">
+                            <input type="hidden" name="subscriptionPlanId" th:value="${plan.id}">
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </article>
+                </div>
+                <div class="offer-list" th:if="${globalFeatureFlags['bundles_enabled']}">
+                    <article class="offer-card" th:each="bundle : ${view.product.bundleOffers}">
+                        <div>
+                            <strong th:text="${bundle.name}">Bundle</strong>
+                            <p th:text="${bundle.description}">Bundle description</p>
+                        </div>
+                        <form action="/cart/items" method="post">
+                            <input type="hidden" name="productId" th:value="${view.product.id}">
+                            <input type="hidden" name="bundleOfferId" th:value="${bundle.id}">
+                            <input type="hidden" name="quantity" th:value="${bundle.bundleQuantity}">
+                            <button type="submit" th:text="|Add ${bundle.bundleQuantity} for $${#numbers.formatDecimal(view.product.price * bundle.bundleQuantity, 1, 2)}|">Add bundle</button>
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <section class="section-card">
+            <div class="section-heading">
+                <p class="eyebrow">Highlights</p>
+                <h2>Why people buy this</h2>
+            </div>
+            <div class="card-grid three-up">
+                <article class="info-card" th:each="highlight : ${view.product.highlights}">
+                    <h3 th:text="${highlight}">Highlight</h3>
+                </article>
+            </div>
+        </section>
+        <th:block th:each="section : ${view.sections}">
+            <div th:replace="~{fragments/store-sections :: render(${section}, ${view.product})}"></div>
+        </th:block>
+    </div>
+    <th:block th:utext="${globalThemeRender.productBottomHtml}"></th:block>
+</main>
+<aside class="sticky-cart-bar" data-sticky-bar th:if="${view.product.presentationMetadata['stickyAddToCart']}">
+    <div>
+        <strong th:text="${view.product.name}">Product</strong>
+        <span th:text="|$${#numbers.formatDecimal(view.product.price, 1, 2)}|">$42.00</span>
+    </div>
+    <button type="button" data-scroll-target="#buy-box">Jump to buy box</button>
+</aside>
+<th:block th:utext="${globalThemeRender.bodyBottomHtml}"></th:block>
+<footer th:replace="~{fragments/layout :: storeFooter()}"></footer>
+</body>
+</html>

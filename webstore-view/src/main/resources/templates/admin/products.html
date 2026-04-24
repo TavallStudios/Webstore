@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Catalog')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('products')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Catalog control</p>
+                    <h1>Catalog</h1>
+                    <p class="lede">Select a product to manage pricing, storytelling, FAQs, proof points, and storefront presentation.</p>
+                </div>
+                <a class="button button-primary" href="/admin/products/new">New product</a>
+            </div>
+            <div class="section-list">
+                <a th:each="product : ${products}" th:href="@{|/admin/products/${product.id}|}">
+                    <strong th:text="${product.name}">Product</strong>
+                    <span class="muted" th:text="${product.slug}">slug</span>
+                </a>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

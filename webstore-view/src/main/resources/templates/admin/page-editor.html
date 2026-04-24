@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Page Editor')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar(${page.slug == 'home' ? 'home-page' : 'product-page'})}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Story editor</p>
+                    <h1 th:text="${page.title}">Page</h1>
+                    <p class="lede">Reorder page sections and edit each section with structured controls matched to the selected section type.</p>
+                </div>
+                <div class="inline-actions">
+                    <a class="button button-secondary" th:href="${previewPath}" target="_blank">Preview page</a>
+                    <button class="button button-secondary" id="create-new-section" type="button">New section</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="split-panel">
+            <div class="settings-section">
+                <div class="utility-bar">
+                    <h2>Page sections</h2>
+                    <button class="button button-secondary" type="button" data-dialog-open="section-guide-dialog">Section guide</button>
+                </div>
+                <div class="config-stack">
+                    <div class="surface-card" th:each="section : ${sections}">
+                        <a th:href="@{|/admin/pages/${page.slug}?sectionId=${section.id}|}">
+                            <strong th:text="${section.displayName}">Section</strong>
+                            <span class="muted" th:text="${section.sectionType + ' / ' + section.placement}">Meta</span>
+                        </a>
+                        <div class="inline-actions">
+                            <form th:action="@{|/admin/pages/sections/${section.id}/move-up|}" method="post">
+                                <input type="hidden" name="pageSlug" th:value="${page.slug}">
+                                <button class="button button-secondary" type="submit">Move up</button>
+                            </form>
+                            <form th:action="@{|/admin/pages/sections/${section.id}/move-down|}" method="post">
+                                <input type="hidden" name="pageSlug" th:value="${page.slug}">
+                                <button class="button button-secondary" type="submit">Move down</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="page-section-form" class="settings-section" action="/admin/pages/sections" method="post" th:object="${selectedSection}">
+                <input id="section-id" type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{contentPageId}" th:value="${page.id}">
+                <input id="configurationJson" type="hidden" th:field="*{configurationJson}">
+
+                <div class="field-grid">
+                    <label>Section key <input th:field="*{sectionKey}" required></label>
+                    <label>Display name <input th:field="*{displayName}" required></label>
+                    <label>Section type
+                        <select id="section-type" th:field="*{sectionType}">
+                            <option value="hero">Hero</option>
+                            <option value="trust-strip">Trust strip</option>
+                            <option value="benefits">Benefits</option>
+                            <option value="lifestyle">Lifestyle story</option>
+                            <option value="reviews">Reviews</option>
+                            <option value="comparison">Comparison</option>
+                            <option value="faq-preview">FAQ preview</option>
+                            <option value="cta">CTA band</option>
+                            <option value="specs">Specs</option>
+                            <option value="custom">Custom key/value</option>
+                        </select>
+                    </label>
+                    <label>Placement
+                        <select th:field="*{placement}">
+                            <option value="top">Top</option>
+                            <option value="after-hero">After hero</option>
+                            <option value="body">Body</option>
+                            <option value="below-buy-box">Below buy box</option>
+                            <option value="footer">Footer</option>
+                        </select>
+                    </label>
+                    <label>Desktop order <input type="number" th:field="*{position}"></label>
+                    <label>Mobile order <input type="number" th:field="*{mobilePosition}"></label>
+                </div>
+
+                <label><input type="checkbox" th:field="*{active}"> Section is active</label>
+
+                <div class="section-type-panel" data-section-panel="hero">
+                    <div class="field-grid">
+                        <label>Eyebrow <input id="hero-eyebrow"></label>
+                        <label>Hero title <input id="hero-title"></label>
+                        <label>Primary CTA label <input id="hero-cta-label"></label>
+                        <label>Primary CTA link <input id="hero-cta-href"></label>
+                        <label>Secondary CTA label <input id="hero-secondary-label"></label>
+                        <label>Secondary CTA link <input id="hero-secondary-href"></label>
+                        <label>Media path <input id="hero-media-path"></label>
+                    </div>
+                    <label>Body copy <textarea id="hero-body"></textarea></label>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="trust-strip">
+                    <label>Headline <input id="trust-headline"></label>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="benefits">
+                    <label>Section title <input id="benefits-title"></label>
+                    <div class="list-editor">
+                        <div class="utility-bar">
+                            <h3>Benefit cards</h3>
+                            <button class="button button-secondary" id="add-benefit-item" type="button">Add benefit</button>
+                        </div>
+                        <div class="list-editor__items" id="benefit-items-list"></div>
+                        <div class="admin-empty-state" data-empty-state>No benefit cards yet.</div>
+                    </div>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="lifestyle">
+                    <div class="field-grid">
+                        <label>Section title <input id="lifestyle-title"></label>
+                        <label>Media path <input id="lifestyle-media-path"></label>
+                    </div>
+                    <label>Body copy <textarea id="lifestyle-body"></textarea></label>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="reviews">
+                    <label>Section title <input id="reviews-title"></label>
+                    <div class="list-editor">
+                        <div class="utility-bar">
+                            <h3>Review cards</h3>
+                            <button class="button button-secondary" id="add-review-item" type="button">Add review</button>
+                        </div>
+                        <div class="list-editor__items" id="review-items-list"></div>
+                        <div class="admin-empty-state" data-empty-state>No review cards yet.</div>
+                    </div>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="comparison">
+                    <label>Section title <input id="comparison-title"></label>
+                    <div class="list-editor">
+                        <div class="utility-bar">
+                            <h3>Comparison rows</h3>
+                            <button class="button button-secondary" id="add-comparison-row" type="button">Add row</button>
+                        </div>
+                        <div class="list-editor__items" id="comparison-rows-list"></div>
+                        <div class="admin-empty-state" data-empty-state>No comparison rows yet.</div>
+                    </div>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="faq-preview">
+                    <div class="field-grid">
+                        <label>Section title <input id="faq-title"></label>
+                        <label>FAQ count <input id="faq-limit" type="number" min="1"></label>
+                    </div>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="cta">
+                    <div class="field-grid">
+                        <label>CTA title <input id="cta-title"></label>
+                        <label>CTA label <input id="cta-label"></label>
+                        <label>CTA link <input id="cta-href"></label>
+                    </div>
+                    <label>Body copy <textarea id="cta-body"></textarea></label>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="specs">
+                    <label>Section title <input id="specs-title"></label>
+                    <div class="list-editor">
+                        <div class="utility-bar">
+                            <h3>Spec rows</h3>
+                            <button class="button button-secondary" id="add-spec-item" type="button">Add spec</button>
+                        </div>
+                        <div class="list-editor__items" id="spec-items-list"></div>
+                        <div class="admin-empty-state" data-empty-state>No specs yet.</div>
+                    </div>
+                </div>
+
+                <div class="section-type-panel" data-section-panel="custom">
+                    <div class="list-editor">
+                        <div class="utility-bar">
+                            <h3>Custom fields</h3>
+                            <button class="button button-secondary" id="add-custom-field" type="button">Add field</button>
+                        </div>
+                        <div class="list-editor__items" id="custom-section-fields-list"></div>
+                        <div class="admin-empty-state" data-empty-state>No custom fields yet.</div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Save section</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+
+<template id="benefit-item-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Benefit card</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Title <input data-field="title"></label>
+            <label>Body <input data-field="body"></label>
+        </div>
+    </div>
+</template>
+
+<template id="review-item-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Review card</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <label>Quote <textarea data-field="quote"></textarea></label>
+        <label>Customer name <input data-field="name"></label>
+    </div>
+</template>
+
+<template id="comparison-row-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Comparison row</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Feature <input data-field="feature"></label>
+            <label>Your product <input data-field="atlas"></label>
+            <label>Alternative <input data-field="other"></label>
+        </div>
+    </div>
+</template>
+
+<template id="spec-item-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Spec row</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Label <input data-field="label"></label>
+            <label>Value <input data-field="value"></label>
+        </div>
+    </div>
+</template>
+
+<template id="key-value-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Custom field</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Key <input data-field="key"></label>
+            <label>Value <input data-field="value"></label>
+        </div>
+    </div>
+</template>
+
+<dialog class="dialog-card" id="section-guide-dialog">
+    <div class="dialog-body">
+        <h3>Section guide</h3>
+        <p class="muted">Use hero for the main page opener, benefits for short proof cards, lifestyle for a media-backed story, reviews for quotes, comparison for a feature table, FAQ preview for a limited FAQ set, and CTA for one focused action block.</p>
+        <div class="dialog-actions">
+            <button class="button button-secondary" type="button" data-dialog-close>Close</button>
+        </div>
+    </div>
+</dialog>
+</body>
+</html>

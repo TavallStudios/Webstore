@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Brand & Messaging')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('site-settings')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Brand & messaging</p>
+                    <h1>Brand & Messaging</h1>
+                    <p class="lede">Control the visual system, customer-facing copy, footer structure, social presence, review proof, and homepage callouts from one page.</p>
+                </div>
+                <button class="button button-secondary" type="button" data-dialog-open="footer-format-dialog">Link format guide</button>
+            </div>
+            <div class="alert alert-success" th:if="${param.saved}">Brand settings were updated.</div>
+            <div class="form-note"><noscript>This page uses JavaScript to convert the structured form into the saved store configuration. Enable JavaScript before editing.</noscript></div>
+        </section>
+
+        <form id="site-settings-form" class="config-form" action="/admin/site-settings" method="post" th:object="${siteSettingsInput}">
+            <input type="hidden" id="brandPaletteJson" th:field="*{brandPaletteJson}">
+            <input type="hidden" id="typographyJson" th:field="*{typographyJson}">
+            <input type="hidden" id="socialLinksJson" th:field="*{socialLinksJson}">
+            <input type="hidden" id="reviewSourceJson" th:field="*{reviewSourceJson}">
+            <input type="hidden" id="footerContentJson" th:field="*{footerContentJson}">
+            <input type="hidden" id="announcementBarsJson" th:field="*{announcementBarsJson}">
+            <input type="hidden" id="promoBannersJson" th:field="*{promoBannersJson}">
+            <input type="hidden" id="trustBadgesJson" th:field="*{trustBadgesJson}">
+            <input type="hidden" th:field="*{seoDefaultsJson}">
+            <input type="hidden" th:field="*{analyticsSettingsJson}">
+            <input type="hidden" th:field="*{paymentSettingsJson}">
+
+            <section class="settings-section">
+                <div class="settings-section-title">
+                    <div>
+                        <p class="eyebrow">Identity</p>
+                        <h2>Store identity</h2>
+                    </div>
+                </div>
+                <div class="field-grid">
+                    <label>Store name <input th:field="*{siteName}" required></label>
+                    <label>Support email <input type="email" th:field="*{supportEmail}" required></label>
+                    <label>Header CTA label <input th:field="*{headerCtaText}" placeholder="Shop now"></label>
+                    <label>Logo path <input th:field="*{logoPath}" placeholder="/media/logo.svg"></label>
+                    <label>Favicon path <input th:field="*{faviconPath}" placeholder="/media/favicon.svg"></label>
+                </div>
+                <div class="field-grid">
+                    <label>Shipping promise <textarea th:field="*{shippingMessage}"></textarea></label>
+                    <label>Returns promise <textarea th:field="*{returnMessage}"></textarea></label>
+                    <label>Guarantee copy <textarea th:field="*{guaranteeMessage}"></textarea></label>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <div class="settings-section-title">
+                    <div>
+                        <p class="eyebrow">Visual system</p>
+                        <h2>Brand palette & typography</h2>
+                    </div>
+                </div>
+                <div class="field-grid">
+                    <label>Background <input id="brand-background" type="color"></label>
+                    <label>Surface <input id="brand-surface" type="color"></label>
+                    <label>Ink <input id="brand-ink" type="color"></label>
+                    <label>Accent <input id="brand-accent" type="color"></label>
+                    <label>Accent deep <input id="brand-accent-deep" type="color"></label>
+                    <label>Muted <input id="brand-muted" type="color"></label>
+                </div>
+                <div class="field-grid">
+                    <label>Headline font stack <input id="font-headline" placeholder="Fraunces, Georgia, serif"></label>
+                    <label>Body font stack <input id="font-body" placeholder="IBM Plex Sans, Segoe UI, sans-serif"></label>
+                    <label>Mono font stack <input id="font-mono" placeholder="IBM Plex Mono, Consolas, monospace"></label>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <div class="settings-section-title">
+                    <div>
+                        <p class="eyebrow">Proof & social</p>
+                        <h2>Social links and review proof</h2>
+                    </div>
+                </div>
+                <div class="field-grid">
+                    <label>Review headline <input id="review-label" placeholder="4.9 / 5 average"></label>
+                    <label>Review source detail <input id="review-source" placeholder="from verified buyers"></label>
+                </div>
+                <div class="list-editor">
+                    <div class="utility-bar">
+                        <h3>Social channels</h3>
+                        <button class="button button-secondary" id="add-social-link" type="button">Add social link</button>
+                    </div>
+                    <div class="list-editor__items" id="social-links-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No social channels yet.</div>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <div class="settings-section-title">
+                    <div>
+                        <p class="eyebrow">Footer</p>
+                        <h2>Footer structure</h2>
+                    </div>
+                </div>
+                <label>Fine print <textarea id="footer-fine-print" placeholder="Short legal or trust statement."></textarea></label>
+                <div class="list-editor">
+                    <div class="utility-bar">
+                        <h3>Footer columns</h3>
+                        <button class="button button-secondary" id="add-footer-column" type="button">Add footer column</button>
+                    </div>
+                    <div class="list-editor__items" id="footer-columns-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No footer columns yet.</div>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <div class="settings-section-title">
+                    <div>
+                        <p class="eyebrow">Homepage callouts</p>
+                        <h2>Announcements, promos, and trust</h2>
+                    </div>
+                </div>
+
+                <div class="list-editor">
+                    <div class="utility-bar">
+                        <h3>Announcement bars</h3>
+                        <button class="button button-secondary" id="add-announcement" type="button">Add announcement</button>
+                    </div>
+                    <div class="list-editor__items" id="announcement-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No announcements yet.</div>
+                </div>
+
+                <div class="list-editor">
+                    <div class="utility-bar">
+                        <h3>Promo banners</h3>
+                        <button class="button button-secondary" id="add-promo-banner" type="button">Add promo banner</button>
+                    </div>
+                    <div class="list-editor__items" id="promo-banner-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No promo banners yet.</div>
+                </div>
+
+                <div class="list-editor">
+                    <div class="utility-bar">
+                        <h3>Trust badges</h3>
+                        <button class="button button-secondary" id="add-trust-badge" type="button">Add trust badge</button>
+                    </div>
+                    <div class="list-editor__items" id="trust-badge-list"></div>
+                    <div class="admin-empty-state" data-empty-state>No trust badges yet.</div>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit">Save brand settings</button>
+            </div>
+        </form>
+    </main>
+</div>
+
+<template id="social-link-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Social link</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Channel <input data-field="channel" placeholder="instagram"></label>
+            <label>URL <input data-field="url" placeholder="https://instagram.com/yourbrand"></label>
+        </div>
+    </div>
+</template>
+
+<template id="footer-column-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Footer column</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <label>Column title <input data-field="title" placeholder="Support"></label>
+        <label>Links
+            <textarea data-field="links" placeholder="Email us | mailto:support@example.com&#10;Track order | /tracking"></textarea>
+        </label>
+    </div>
+</template>
+
+<template id="announcement-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Announcement</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Label <input data-field="label" placeholder="Spring launch"></label>
+            <label>Tone
+                <select data-field="tone">
+                    <option value="accent">Accent</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="calm">Calm</option>
+                </select>
+            </label>
+        </div>
+        <label>Message <input data-field="message" placeholder="Save 10% through Friday"></label>
+    </div>
+</template>
+
+<template id="promo-banner-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Promo banner</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Placement
+                <select data-field="placement">
+                    <option value="after-hero">After hero</option>
+                    <option value="body">Body</option>
+                    <option value="footer">Footer</option>
+                </select>
+            </label>
+            <label>Eyebrow <input data-field="eyebrow" placeholder="Limited run"></label>
+            <label>CTA label <input data-field="ctaLabel" placeholder="Shop now"></label>
+            <label>CTA link <input data-field="ctaHref" placeholder="/products/atlas-bottle"></label>
+        </div>
+        <label>Headline <input data-field="headline" placeholder="Copper Clay ships this week"></label>
+        <label>Body <textarea data-field="body" placeholder="Small batch finish available while inventory lasts."></textarea></label>
+    </div>
+</template>
+
+<template id="trust-badge-template">
+    <div class="list-editor__row" data-editor-row>
+        <div class="list-editor__row-header">
+            <strong>Trust badge</strong>
+            <button class="button button-danger" type="button" data-row-remove>Remove</button>
+        </div>
+        <div class="field-grid">
+            <label>Label <input data-field="label" placeholder="Free shipping"></label>
+            <label>Detail <input data-field="detail" placeholder="Orders over $50"></label>
+        </div>
+    </div>
+</template>
+
+<dialog class="dialog-card" id="footer-format-dialog">
+    <div class="dialog-body">
+        <h3>Footer link format</h3>
+        <p class="muted">Enter one link per line using this format:</p>
+        <pre>Label | /path-or-url</pre>
+        <div class="dialog-actions">
+            <button class="button button-secondary" type="button" data-dialog-close>Close</button>
+        </div>
+    </div>
+</dialog>
+</body>
+</html>

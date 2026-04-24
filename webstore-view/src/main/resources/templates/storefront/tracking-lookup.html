@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: storeHead('Track Your Order')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: storeHeader('atlas-bottle')}"></header>
+<th:block th:utext="${globalThemeRender.bodyTopHtml}"></th:block>
+<main class="storefront-main">
+    <div class="page-shell">
+        <section class="section-card">
+            <h1>Track your order</h1>
+            <form action="/tracking" method="post">
+                <label>Order number <input name="orderNumber" placeholder="WS-100001" required></label>
+                <label>Email <input type="email" name="email" placeholder="customer@example.com"></label>
+                <button type="submit">Lookup order</button>
+            </form>
+        </section>
+    </div>
+</main>
+<th:block th:utext="${globalThemeRender.bodyBottomHtml}"></th:block>
+<footer th:replace="~{fragments/layout :: storeFooter()}"></footer>
+</body>
+</html>

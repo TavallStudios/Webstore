@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: storeHead('Tracking Details')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: storeHeader('atlas-bottle')}"></header>
+<th:block th:utext="${globalThemeRender.bodyTopHtml}"></th:block>
+<main class="storefront-main">
+    <div class="page-shell story-stack">
+        <section class="section-card">
+            <p class="eyebrow" th:text="${view.order.orderNumber}">Order number</p>
+            <h1>Tracking details</h1>
+            <p th:text="${view.order.fulfillmentStatus}">Fulfillment status</p>
+            <p th:if="${view.shipment}" th:text="${view.shipment.carrier + ' / ' + view.shipment.trackingNumber}">Shipment</p>
+        </section>
+        <section class="section-card" th:if="${view.shipment}">
+            <h2>Shipment timeline</h2>
+            <div class="order-line-list">
+                <article class="order-line" th:each="event : ${view.shipment.trackingEvents}">
+                    <div>
+                        <strong th:text="${event.status}">Status</strong>
+                        <p th:text="${event.message}">Message</p>
+                    </div>
+                    <span th:text="${#temporals.format(event.eventTimestamp, 'yyyy-MM-dd HH:mm')}">Time</span>
+                </article>
+            </div>
+        </section>
+    </div>
+</main>
+<th:block th:utext="${globalThemeRender.bodyBottomHtml}"></th:block>
+<footer th:replace="~{fragments/layout :: storeFooter()}"></footer>
+</body>
+</html>

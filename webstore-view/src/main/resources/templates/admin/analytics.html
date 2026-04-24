@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: adminHead('Growth & SEO')}"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/layout :: adminSidebar('analytics')}"></aside>
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <p class="eyebrow">Growth & SEO</p>
+                    <h1>Growth & SEO</h1>
+                    <p class="lede">Manage the default SEO copy, social image, and analytics identifiers using business-friendly fields instead of JSON.</p>
+                </div>
+            </div>
+            <div class="alert alert-success" th:if="${param.saved}">Growth settings were updated.</div>
+        </section>
+
+        <form id="analytics-settings-form" class="config-form" action="/admin/analytics" method="post" th:object="${siteSettingsInput}">
+            <input type="hidden" id="seoDefaultsJson" th:field="*{seoDefaultsJson}">
+            <input type="hidden" id="analyticsSettingsJson" th:field="*{analyticsSettingsJson}">
+            <input type="hidden" th:field="*{paymentSettingsJson}">
+
+            <section class="admin-columns">
+                <div class="admin-column">
+                <article class="provider-card">
+                    <p class="eyebrow">SEO defaults</p>
+                    <label>Title template <input id="seo-title-template" placeholder="%s | Your Store"></label>
+                    <label>Default description <textarea id="seo-description" placeholder="Short search result description for the storefront."></textarea></label>
+                    <label>Open Graph image path <input id="seo-og-image" placeholder="/media/og-card.svg"></label>
+                </article>
+                </div>
+
+                <div class="admin-column">
+                <article class="provider-card">
+                    <p class="eyebrow">Analytics</p>
+                    <label>GA4 measurement ID <input id="analytics-ga4" placeholder="G-XXXXXXX"></label>
+                    <label>Meta Pixel ID <input id="analytics-pixel" placeholder="1234567890"></label>
+                    <label>Conversion hooks
+                        <textarea id="analytics-hooks" placeholder="purchase&#10;begin_checkout"></textarea>
+                    </label>
+                </article>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit">Save growth settings</button>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>
