@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Atlas Bottle OG">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="100%" stop-color="#f0d9c7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="90" y="220" font-family="Georgia, serif" font-size="96" fill="#1d1a16">Atlas Bottle</text>
+  <text x="90" y="320" font-family="Arial, sans-serif" font-size="42" fill="#8c3514">Leak-proof insulated bottle for desk, commute, and gym.</text>
+  <rect x="840" y="120" width="180" height="360" rx="72" fill="#c85f35"/>
+  <rect x="885" y="80" width="90" height="70" rx="24" fill="#8c3514"/>
+  <circle cx="930" cy="300" r="26" fill="#fff7ed"/>
+</svg>
