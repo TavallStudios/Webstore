@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Runtime Operations</title><link rel="stylesheet" th:href="@{/admin.css}"></head>
+<body>
+<div class="shell">
+    <div class="nav"><div class="brand">Runtime Operations</div><div class="nav-links"><a href="/admin">Dashboard</a><a href="/admin/sites">Sites</a></div></div>
+    <section class="panel">
+        <table class="table">
+            <tr><th>Site</th><th>Job</th><th>Status</th><th>Retry</th><th>Error</th></tr>
+            <tr th:each="job : ${jobs}">
+                <td th:text="${job.siteName}">Site</td>
+                <td th:text="${job.jobType}">Job</td>
+                <td th:text="${job.jobStatus}">Status</td>
+                <td th:text="${job.retryCount}">0</td>
+                <td th:text="${job.lastError}">none</td>
+            </tr>
+        </table>
+    </section>
+</div>
+</body>
+</html>

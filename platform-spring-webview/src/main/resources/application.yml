@@ -1,0 +1,82 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:${NOVUS_POSTGRES_URL:jdbc:postgresql://localhost:15432/tavall}}
+    username: ${DATABASE_USERNAME:${NOVUS_POSTGRES_USER:novus}}
+    password: ${DATABASE_PASSWORD:${NOVUS_POSTGRES_PASS:}}
+    hikari:
+      schema: platform_core
+      data-source-properties:
+        sslmode: disable
+        connectTimeout: 5
+        socketTimeout: 30
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: true
+  flyway:
+    enabled: true
+    default-schema: platform_core
+    schemas: platform_auth,platform_core,platform_sites,platform_audit
+    locations: classpath:db/migration/platform
+    create-schemas: true
+  thymeleaf:
+    cache: false
+  security:
+    oauth2:
+      client:
+        provider:
+          discord:
+            authorization-uri: https://discord.com/oauth2/authorize
+            token-uri: https://discord.com/api/oauth2/token
+            user-info-uri: https://discord.com/api/users/@me
+            user-name-attribute: id
+          microsoft:
+            authorization-uri: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+            token-uri: https://login.microsoftonline.com/common/oauth2/v2.0/token
+            user-info-uri: https://graph.microsoft.com/oidc/userinfo
+            jwk-set-uri: https://login.microsoftonline.com/common/discovery/v2.0/keys
+            user-name-attribute: sub
+
+server:
+  port: ${PLATFORM_WEBVIEW_PORT:${PLATFORM_WEB_PORT:8081}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+platform:
+  auth:
+    master-admin-emails: ${PLATFORM_MASTER_ADMIN_EMAILS:}
+  control:
+    internal-api:
+      shared-secret: ${PLATFORM_INTERNAL_API_SHARED_SECRET:change-me}
+    kubernetes:
+      kubeconfig-path: ${KUBECONFIG_PATH:}
+      kubevirt-namespace: ${PLATFORM_KUBEVIRT_NAMESPACE:kubevirt}
+      kubevirt-resource-name: ${PLATFORM_KUBEVIRT_RESOURCE_NAME:kubevirt}
+      namespace-prefix: ${PLATFORM_SITE_NAMESPACE_PREFIX:tenant-site}
+      runtime-base-image: ${TENANT_RUNTIME_BASE_IMAGE:quay.io/containerdisks/fedora:40}
+      ingress-class-name: ${TENANT_RUNTIME_INGRESS_CLASS:nginx}
+      infrastructure-profile: ${PLATFORM_KUBEVIRT_INFRASTRUCTURE_PROFILE:AUTO}
+      dedicated-node-selector: ${PLATFORM_KUBEVIRT_DEDICATED_NODE_SELECTOR:platform.tavall/runtime-profile=dedicated-kubevirt}
+      nested-node-selector: ${PLATFORM_KUBEVIRT_NESTED_NODE_SELECTOR:platform.tavall/runtime-profile=nested-kubevirt}
+      dry-run: ${PLATFORM_CONTROL_DRY_RUN:false}
+    routing:
+      public-domain-suffix: ${PLATFORM_PUBLIC_DOMAIN_SUFFIX:stores.local}
+    tenant-runtime:
+      database-url: ${TENANT_RUNTIME_DATABASE_URL:${DATABASE_URL:${NOVUS_POSTGRES_URL:jdbc:postgresql://localhost:15432/tavall}}}
+      database-username: ${TENANT_RUNTIME_DATABASE_USERNAME:${DATABASE_USERNAME:${NOVUS_POSTGRES_USER:novus}}}
+      database-password: ${TENANT_RUNTIME_DATABASE_PASSWORD:${DATABASE_PASSWORD:${NOVUS_POSTGRES_PASS:}}}
+      media-storage-path: ${TENANT_RUNTIME_MEDIA_STORAGE_PATH:/srv/webstore/media}
+      theme-storage-path: ${TENANT_RUNTIME_THEME_STORAGE_PATH:/srv/webstore/theme}
+      bootstrap-artifact-url: ${TENANT_RUNTIME_BOOTSTRAP_ARTIFACT_URL:}
+      bootstrap-artifact-sha256: ${TENANT_RUNTIME_BOOTSTRAP_ARTIFACT_SHA256:}
+    sync:
+      fixed-delay-ms: ${PLATFORM_RUNTIME_SYNC_DELAY_MS:30000}

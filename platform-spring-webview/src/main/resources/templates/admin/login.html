@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Admin Login</title>
+    <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<div class="shell">
+    <section class="panel">
+        <div class="eyebrow">Internal control dashboard</div>
+        <h1>Master admin access uses the same social login flow.</h1>
+        <p class="muted">After authentication the session must carry the `MASTER_ADMIN` role, typically via `platform.auth.master-admin-emails`.</p>
+        <div class="button-row">
+            <a class="btn btn-primary" th:each="provider : ${providers}" th:href="@{/admin/auth/{registrationId}(registrationId=${provider.registrationId})}" th:text="'Continue with ' + ${provider.displayName}">Sign in</a>
+            <a class="btn" href="/">Back to platform</a>
+        </div>
+        <p class="muted" th:if="${providers.isEmpty()}">No provider registrations are configured for this environment.</p>
+    </section>
+</div>
+</body>
+</html>
