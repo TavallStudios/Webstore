@@ -2,6 +2,8 @@
 
 This index reports audited implementation status at commit `afa6994109f2c1fb861fe891a338cd8b161aed28`. It does not claim that repository tests, browsers, payment providers, PostgreSQL, Kubernetes, or KubeVirt were executed during this documentation pass.
 
+See [AUDIT_SCOPE.md](AUDIT_SCOPE.md) for the inspected evidence, excluded execution, and GraalVM search boundary.
+
 ## Status Vocabulary
 
 | Status | Meaning |
