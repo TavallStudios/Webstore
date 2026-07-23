@@ -228,7 +228,7 @@ class AdminControllerTest {
         siteSettingsRepository.deleteAll();
         productRepository.deleteAll();
 
-        Path storageRoot = Path.of("target/test-media");
+        Path storageRoot = Path.of("build/test-media");
         if (Files.exists(storageRoot)) {
             try (var paths = Files.walk(storageRoot)) {
                 paths.sorted(java.util.Comparator.reverseOrder())

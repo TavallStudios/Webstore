@@ -19,6 +19,6 @@ spring:
 
 storefront:
   media:
-    storage-path: ./target/test-media
+    storage-path: ./build/test-media
   theme:
-    storage-path: ./target/test-media/themes/active
+    storage-path: ./build/test-media/themes/active

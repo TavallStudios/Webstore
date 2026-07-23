@@ -1,13 +1,13 @@
-FROM maven:3.9.11-eclipse-temurin-21 AS build
+FROM eclipse-temurin:25-jdk AS build
 WORKDIR /workspace
 COPY . .
-RUN mvn -q -pl platform-spring-webview -am -DskipTests package
+RUN ./gradlew --no-daemon :platform-spring-webview:jar stageDistribution
 
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:25-jre
 RUN useradd --system --uid 10001 spring
 WORKDIR /app
-COPY --from=build /workspace/platform-spring-webview/target/platform-spring-webview-1.0.0-SNAPSHOT.jar /app/app.jar
+COPY --from=build /workspace/distribution/platform/ /app/
 ENV SERVER_PORT=8080
 EXPOSE 8080
 USER spring
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-cp", "/app/application.jar:/app/libs/*", "org.tavall.platform.PlatformSpringWebviewApplication"]
