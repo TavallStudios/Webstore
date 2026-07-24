@@ -1,9 +1,5 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/apache-maven-*/
-.mvn/wrapper/apache-maven-*-bin.zip
-!**/src/main/**/target/
-!**/src/test/**/target/
+.gradle/
+distribution/
 .kotlin
 
 ### IntelliJ IDEA ###

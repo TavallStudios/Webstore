@@ -27,7 +27,7 @@ export default defineConfig({
     strictPort: true
   },
   build: {
-    outDir: resolve(projectRoot, "target/vite-assets"),
+    outDir: resolve(projectRoot, "build/vite-assets"),
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {

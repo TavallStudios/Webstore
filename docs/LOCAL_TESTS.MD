@@ -21,37 +21,37 @@ Notes:
 Run the platform site:
 
 ```powershell
-.\mvnw -pl platform-spring-webview -am spring-boot:run
+.\gradlew.bat :platform-spring-webview:run
 ```
 
 Run the storefront:
 
 ```powershell
-.\mvnw -pl webstore-view -am spring-boot:run
+.\gradlew.bat :webstore-view:run
 ```
 
 Run the full test suite:
 
 ```powershell
-.\mvnw -q test
+.\gradlew.bat test
 ```
 
 Build all three modules:
 
 ```powershell
-.\mvnw -q -DskipTests package
+.\gradlew.bat assemble stageDistribution
 ```
 
 Run only the platform internal API tests:
 
 ```powershell
-.\mvnw -q -pl platform-internal-api -am test
+.\gradlew.bat :platform-internal-api:test
 ```
 
 Run only the storefront tests:
 
 ```powershell
-.\mvnw -q -pl webstore-view -am test
+.\gradlew.bat :webstore-view:test
 ```
 
 ## Local Dependencies

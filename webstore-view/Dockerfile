@@ -1,15 +1,15 @@
-FROM maven:3.9.11-eclipse-temurin-21 AS build
+FROM eclipse-temurin:25-jdk AS build
 WORKDIR /workspace
 COPY . .
-RUN mvn -q -pl webstore-view -am -DskipTests package
+RUN ./gradlew --no-daemon :webstore-view:jar stageDistribution
 
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:25-jre
 RUN useradd --system --uid 10001 spring \
     && mkdir -p /srv/webstore/media /srv/webstore/theme /app \
     && chown -R spring:spring /srv/webstore /app
 WORKDIR /app
-COPY --from=build /workspace/webstore-view/target/webstore-view-1.0.0-SNAPSHOT.jar /app/app.jar
+COPY --from=build /workspace/distribution/storefront/ /app/
 ENV SERVER_PORT=8080
 EXPOSE 8080
 USER spring
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-cp", "/app/application.jar:/app/libs/*", "org.tavall.webstore.WebstoreApplication"]
