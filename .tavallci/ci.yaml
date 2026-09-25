@@ -1,0 +1,44 @@
+version: 2
+
+source:
+  repository: TavallStudios/Webstore
+  provider: github
+
+build:
+  type: gradle
+  java: 25
+  gradle: 9.6.1
+
+resources:
+  mode: SYSTEM
+
+artifacts:
+  - name: webstore-platform-runtime
+    path: platform-spring-webview/build/libs/platform-spring-webview.jar
+  - name: webstore-storefront-runtime
+    path: webstore-view/build/libs/webstore-view.jar
+
+requiredChecks:
+  - quality
+  - behavior
+
+checks:
+  quality:
+    executor: gradle
+    tasks:
+      - "clean"
+      - ":platform-internal-api:clean"
+      - ":platform-spring-webview:clean"
+      - ":webstore-view:clean"
+      - "check"
+      - ":platform-internal-api:check"
+      - ":platform-spring-webview:check"
+      - ":webstore-view:check"
+      - "assemble"
+      - ":platform-internal-api:assemble"
+      - ":platform-spring-webview:assemble"
+      - ":webstore-view:assemble"
+
+  behavior:
+    executor: shell
+    script: .tavallci/scripts/frontend-build.sh
