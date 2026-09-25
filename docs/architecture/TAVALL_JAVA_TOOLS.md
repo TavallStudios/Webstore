@@ -9,3 +9,5 @@ Spring remains the web/application framework. Existing Spring Data/JPA wiring is
 Do not add new project-local service locators, first-party ServiceLoader composition, executor frameworks, logging wrappers, registry/cache/event-bus frameworks, reflection scanners, scheduled executors, or database infrastructure for concerns already owned by the Tavall tools.
 
 Exact Java 25 repository verification, dependency locks, web acceptance, and persistence integration tests are required before promotion.
+
+Tavall modules are declared in `.tavallci` and composed from exact source by Tavall CI. Maven Local and GitHub Packages are not internal dependency authorities; public Webstore package publication remains a separate release operation.

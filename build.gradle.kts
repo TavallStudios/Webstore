@@ -27,27 +27,10 @@ subprojects {
     }
 
     repositories {
-        mavenCentral()
-        val githubToken = providers.environmentVariable("GITHUB_TOKEN").orNull
-        if (!githubToken.isNullOrBlank()) {
-            listOf(
-                "tavall-di",
-                "tavall-cache",
-                "tavall-concurrency",
-                "tavall-database",
-                "tavall-eventbus",
-                "tavall-logging",
-                "tavall-reflection",
-                "tavall-registry",
-                "tavall-scheduler",
-            ).forEach { repository ->
-                maven("https://maven.pkg.github.com/TavallStudios/$repository") {
-                    name = "github${repository.replace("-", "")}"
-                    credentials {
-                        username = providers.environmentVariable("GITHUB_ACTOR").orElse("github").get()
-                        password = githubToken
-                    }
-                }
+        mavenCentral {
+            content {
+                excludeGroupByRegex("org\\.tavall(?:\\..*)?")
+                excludeGroupByRegex("com\\.tavall(?:\\..*)?")
             }
         }
     }
