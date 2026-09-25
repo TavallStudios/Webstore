@@ -12,6 +12,44 @@ build:
 resources:
   mode: SYSTEM
 
+dependencies:
+  - kind: source
+    identity: TavallStudios/tavall-cache
+    role: SHARED_DEP
+    selector: required-source
+  - kind: source
+    identity: TavallStudios/tavall-concurrency
+    role: SHARED_DEP
+    selector: required-source
+  - kind: source
+    identity: TavallStudios/tavall-database
+    role: SHARED_DEP
+    selector: required-source
+  - kind: source
+    identity: TavallStudios/tavall-di
+    role: SHARED_DEP
+    selector: required-source
+  - kind: source
+    identity: TavallStudios/tavall-eventbus
+    role: SHARED_DEP
+    selector: required-source
+  - kind: source
+    identity: TavallStudios/tavall-logging
+    role: SHARED_DEP
+    selector: required-source
+  - kind: source
+    identity: TavallStudios/tavall-reflection
+    role: SHARED_DEP
+    selector: required-source
+  - kind: source
+    identity: TavallStudios/tavall-registry
+    role: SHARED_DEP
+    selector: required-source
+  - kind: source
+    identity: TavallStudios/tavall-scheduler
+    role: SHARED_DEP
+    selector: required-source
+
 artifacts:
   - name: webstore-platform-runtime
     path: platform-spring-webview/build/libs/platform-spring-webview.jar
