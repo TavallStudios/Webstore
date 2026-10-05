@@ -1,7 +1,8 @@
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 
-const projectRoot = resolve(process.cwd());
+const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "webstore-view");
 const staticRoot = resolve(projectRoot, "src/main/resources/static");
 const backendOrigin = process.env.VITE_BACKEND_ORIGIN || "http://127.0.0.1:8080";
 
