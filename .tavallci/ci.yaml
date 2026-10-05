@@ -12,6 +12,11 @@ build:
 resources:
   mode: SYSTEM
 
+modules:
+  - platform-internal-api
+  - platform-spring-webview
+  - webstore-view
+
 dependencies:
   - kind: source
     identity: TavallStudios/tavall-cache
